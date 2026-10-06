@@ -31,6 +31,14 @@ interface WasteListingRow {
   created_at: string;
 }
 
+interface RecoveryTransactionRow {
+  id: string;
+  listing_id: string;
+  status: string;
+  payment_status: string;
+  created_at: string;
+}
+
 const materialLabels: Record<MaterialCategory, string> = {
   concrete_rubble: "Concrete & Rubble",
   bricks_masonry: "Bricks & Masonry",
@@ -71,6 +79,22 @@ const statusStyles: Record<
     label: "Cancelled",
     className: "border-[#e4bdb8] bg-[#fff1ef] text-[#9b4036]",
   },
+};
+
+const transactionStatusLabels: Record<string, string> = {
+  assigned: "Assigned to collector",
+  pickup_in_progress: "Pickup in progress",
+  collected: "Collected",
+  in_transit: "In transit",
+  received: "Received by processor",
+  completed: "Recovery completed",
+  cancelled: "Recovery cancelled",
+};
+
+const paymentStatusLabels: Record<string, string> = {
+  pending: "Pending",
+  paid: "Paid",
+  not_applicable: "Not applicable",
 };
 
 function formatQuantity(quantityKg: number | string): string {
@@ -164,6 +188,29 @@ export default async function GeneratorWasteListings({
 
   const listings = (data ?? []) as WasteListingRow[];
 
+  const listingIds = listings.map((listing) => listing.id);
+
+  let transactions: RecoveryTransactionRow[] = [];
+
+  if (listingIds.length > 0) {
+    const { data: transactionData } = await supabase
+      .from("recovery_transactions")
+      .select(
+        "id, listing_id, status, payment_status, created_at",
+      )
+      .in("listing_id", listingIds);
+
+    transactions = (transactionData ??
+      []) as RecoveryTransactionRow[];
+  }
+
+  const transactionsByListingId = new Map(
+    transactions.map((transaction) => [
+      transaction.listing_id,
+      transaction,
+    ]),
+  );
+
   return (
     <section className="border border-[#d9dfd3] bg-white p-6 sm:p-8">
       <div className="border-b border-[#d9dfd3] pb-6">
@@ -216,6 +263,7 @@ export default async function GeneratorWasteListings({
               listing.condition;
 
             const location = listing.location;
+            const transaction = transactionsByListingId.get(listing.id);
 
             return (
               <article
@@ -290,6 +338,53 @@ export default async function GeneratorWasteListings({
                     </p>
                   </div>
                 </div>
+
+                {transaction ? (
+                  <div className="mt-6 border-t border-[#d9dfd3] pt-5">
+                    <div className="flex flex-wrap items-center justify-between gap-3">
+                      <div>
+                        <p className="text-xs font-semibold uppercase tracking-[0.12em] text-[#d97736]">
+                          Recovery transaction
+                        </p>
+
+                        <p className="mt-1 text-sm font-semibold text-[#203b2c]">
+                          {transactionStatusLabels[
+                            transaction.status
+                          ] ?? transaction.status}
+                        </p>
+                      </div>
+
+                      <span className="border border-[#e4c9a9] bg-[#fff5e8] px-3 py-1 text-xs font-semibold text-[#9a5b20]">
+                        Payment:{" "}
+                        {paymentStatusLabels[
+                          transaction.payment_status
+                        ] ?? transaction.payment_status}
+                      </span>
+                    </div>
+
+                    <div className="mt-4 grid gap-4 sm:grid-cols-2">
+                      <div>
+                        <p className="text-xs font-semibold uppercase tracking-wide text-[#66756a]">
+                          Transaction ID
+                        </p>
+
+                        <p className="mt-1 break-all font-mono text-xs text-[#203b2c]">
+                          {transaction.id}
+                        </p>
+                      </div>
+
+                      <div>
+                        <p className="text-xs font-semibold uppercase tracking-wide text-[#66756a]">
+                          Accepted on
+                        </p>
+
+                        <p className="mt-1 text-sm font-semibold text-[#203b2c]">
+                          {formatDate(transaction.created_at)}
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                ) : null}
               </article>
             );
           })}

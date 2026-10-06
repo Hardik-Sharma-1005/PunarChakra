@@ -5,7 +5,10 @@ import { getCurrentProfile } from "@/lib/auth/get-current-profile";
 import { getAdminProfile } from "@/lib/auth/get-admin-profile";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 import { signOutAndRedirectAction } from "@/lib/auth/sign-out";
+import { getCollectorDiscovery } from "@/lib/collector/discovery";
 import AdminApprovalPanel from "./admin-approval-panel";
+import CollectorDiscovery from "./collector-discovery";
+import CollectorProfileSetup from "./collector-profile-setup";
 import GeneratorWasteListingForm from "./generator-waste-listing-form";
 import GeneratorWasteListings from "./generator-waste-listings";
 
@@ -73,6 +76,26 @@ export default async function DashboardPage() {
     }
   }
 
+  let collectorProfileExists = false;
+
+  if (profile.role === "collector") {
+    const supabase = await createSupabaseServerClient();
+
+    const { data } = await supabase
+      .from("collector_profiles")
+      .select("id")
+      .eq("user_id", profile.id)
+      .maybeSingle();
+
+    collectorProfileExists = Boolean(data);
+  }
+
+  let collectorDiscovery = null;
+
+  if (profile.role === "collector" && collectorProfileExists) {
+    collectorDiscovery = await getCollectorDiscovery();
+  }
+
   return (
     <main className="min-h-screen bg-[#f5f5ed] px-4 py-10 text-[#203b2c] sm:px-8">
       <div className="mx-auto w-full max-w-5xl">
@@ -124,12 +147,26 @@ export default async function DashboardPage() {
 
             <GeneratorWasteListings generatorId={profile.id} />
           </div>
+        ) : profile.role === "collector" ? (
+          collectorProfileExists && collectorDiscovery ? (
+            <CollectorDiscovery
+              items={collectorDiscovery.items}
+              loadError={
+                collectorDiscovery.success
+                  ? undefined
+                  : collectorDiscovery.message
+              }
+            />
+          ) : (
+            <CollectorProfileSetup />
+          )
         ) : (
           <section className="border border-[#d9dfd3] bg-white p-6 sm:p-8">
             <h2 className="text-lg font-semibold">Getting started</h2>
+
             <p className="mt-2 text-sm leading-6 text-[#66756a]">
-              Your role-specific tools and recovery activities will appear
-              here as the platform is developed.
+              Your role-specific tools and recovery activities will
+              appear here as the platform is developed.
             </p>
           </section>
         )}

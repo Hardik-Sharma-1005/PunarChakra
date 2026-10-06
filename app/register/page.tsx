@@ -13,6 +13,24 @@ const initialState: AuthActionState = {
   message: "",
 };
 
+const registrationRoles = [
+  {
+    value: "generator",
+    label: "Waste Generator",
+    description: "I have C&D waste that needs recovery.",
+  },
+  {
+    value: "collector",
+    label: "Waste Collector",
+    description: "I collect and transport recoverable C&D waste.",
+  },
+  {
+    value: "processor",
+    label: "Processor",
+    description: "I receive and process recovered materials.",
+  },
+] as const;
+
 export default function RegisterPage() {
   const [state, formAction, isPending] = useActionState(
     signUpAction,
@@ -42,6 +60,38 @@ export default function RegisterPage() {
         </div>
 
         <form action={formAction} className="mt-8 space-y-5">
+          <fieldset>
+            <legend className="mb-3 block text-sm font-medium">
+              Register as *
+            </legend>
+
+            <div className="space-y-3">
+              {registrationRoles.map((role) => (
+                <label
+                  key={role.value}
+                  className="flex cursor-pointer items-start gap-3 border border-[#d9dfd3] p-4 transition hover:border-[#386747] has-[:checked]:border-[#386747] has-[:checked]:bg-[#f5f8f3]"
+                >
+                  <input
+                    type="radio"
+                    name="role"
+                    value={role.value}
+                    required
+                    className="mt-1 h-4 w-4 accent-[#28563b]"
+                  />
+
+                  <span>
+                    <span className="block text-sm font-semibold">
+                      {role.label}
+                    </span>
+                    <span className="mt-1 block text-xs leading-5 text-[#66756a]">
+                      {role.description}
+                    </span>
+                  </span>
+                </label>
+              ))}
+            </div>
+          </fieldset>
+
           <div>
             <label
               htmlFor="displayName"

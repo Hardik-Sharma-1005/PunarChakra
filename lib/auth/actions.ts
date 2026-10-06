@@ -1,4 +1,3 @@
-
 "use server";
 
 import { redirect } from "next/navigation";
@@ -12,6 +11,14 @@ export type AuthActionState = {
   message: string;
 };
 
+const REGISTRATION_ROLES = ["generator", "collector", "processor"] as const;
+
+type RegistrationRole = (typeof REGISTRATION_ROLES)[number];
+
+function isRegistrationRole(value: string): value is RegistrationRole {
+  return REGISTRATION_ROLES.includes(value as RegistrationRole);
+}
+
 export async function signUpAction(
   _prevState: AuthActionState,
   formData: FormData,
@@ -22,11 +29,19 @@ export async function signUpAction(
   ).trim();
   const email = String(formData.get("email") ?? "").trim();
   const password = String(formData.get("password") ?? "");
+  const role = String(formData.get("role") ?? "").trim().toLowerCase();
 
-  if (!displayName || !email || !password) {
+  if (!displayName || !email || !password || !role) {
     return {
       success: false,
       message: "Please fill in all required fields.",
+    };
+  }
+
+  if (!isRegistrationRole(role)) {
+    return {
+      success: false,
+      message: "Please select a valid account type.",
     };
   }
 
@@ -53,6 +68,7 @@ export async function signUpAction(
       data: {
         display_name: displayName,
         organization_name: organizationName || null,
+        role,
       },
     },
   });
@@ -159,13 +175,10 @@ export async function setProfileApprovalAction(
 
   const supabase = await createSupabaseServerClient();
 
-  const { error } = await supabase.rpc(
-    "set_profile_approval_status",
-    {
-      p_target_profile_id: targetProfileId,
-      p_new_status: newStatus,
-    },
-  );
+  const { error } = await supabase.rpc("set_profile_approval_status", {
+    p_target_profile_id: targetProfileId,
+    p_new_status: newStatus,
+  });
 
   if (error) {
     return {
