@@ -8,6 +8,7 @@ import { signOutAndRedirectAction } from "@/lib/auth/sign-out";
 import { getCollectorDiscovery } from "@/lib/collector/discovery";
 import { getCollectorActiveRecoveries } from "@/lib/collector/active-recoveries";
 import { getProcessorDiscovery } from "@/lib/processor/discovery";
+import { getProcessorActiveRecoveries } from "@/lib/processor/active-recoveries";
 import AdminApprovalPanel from "./admin-approval-panel";
 import CollectorDiscovery from "./collector-discovery";
 import CollectorActiveRecoveries from "./collector-active-recoveries";
@@ -15,6 +16,7 @@ import CollectorProfileSetup from "./collector-profile-setup";
 import GeneratorWasteListingForm from "./generator-waste-listing-form";
 import GeneratorWasteListings from "./generator-waste-listings";
 import ProcessorDiscovery from "./processor-discovery";
+import ProcessorActiveRecoveries from "./processor-active-recoveries";
 import ProcessorProfileSetup from "./processor-profile-setup";
 
 const roleLabels = {
@@ -118,9 +120,11 @@ export default async function DashboardPage() {
   }
 
   let processorDiscovery = null;
+  let processorActiveRecoveries = null;
 
   if (profile.role === "processor" && processorProfileExists) {
     processorDiscovery = await getProcessorDiscovery();
+    processorActiveRecoveries = await getProcessorActiveRecoveries();
   }
 
   return (
@@ -201,15 +205,28 @@ export default async function DashboardPage() {
             <CollectorProfileSetup />
           )
         ) : profile.role === "processor" ? (
-          processorProfileExists && processorDiscovery ? (
-            <ProcessorDiscovery
-              items={processorDiscovery.items}
-              loadError={
-                processorDiscovery.success
-                  ? undefined
-                  : processorDiscovery.message
-              }
-            />
+          processorProfileExists &&
+          processorDiscovery &&
+          processorActiveRecoveries ? (
+            <div className="space-y-8">
+              <ProcessorDiscovery
+                items={processorDiscovery.items}
+                loadError={
+                  processorDiscovery.success
+                    ? undefined
+                    : processorDiscovery.message
+                }
+              />
+
+              <ProcessorActiveRecoveries
+                items={processorActiveRecoveries.items}
+                loadError={
+                  processorActiveRecoveries.success
+                    ? undefined
+                    : processorActiveRecoveries.message
+                }
+              />
+            </div>
           ) : (
             <ProcessorProfileSetup />
           )
