@@ -6,11 +6,16 @@ import { getAdminProfile } from "@/lib/auth/get-admin-profile";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 import { signOutAndRedirectAction } from "@/lib/auth/sign-out";
 import { getCollectorDiscovery } from "@/lib/collector/discovery";
+import { getCollectorActiveRecoveries } from "@/lib/collector/active-recoveries";
+import { getProcessorDiscovery } from "@/lib/processor/discovery";
 import AdminApprovalPanel from "./admin-approval-panel";
 import CollectorDiscovery from "./collector-discovery";
+import CollectorActiveRecoveries from "./collector-active-recoveries";
 import CollectorProfileSetup from "./collector-profile-setup";
 import GeneratorWasteListingForm from "./generator-waste-listing-form";
 import GeneratorWasteListings from "./generator-waste-listings";
+import ProcessorDiscovery from "./processor-discovery";
+import ProcessorProfileSetup from "./processor-profile-setup";
 
 const roleLabels = {
   generator: "Waste Generator",
@@ -91,9 +96,31 @@ export default async function DashboardPage() {
   }
 
   let collectorDiscovery = null;
+  let collectorActiveRecoveries = null;
 
   if (profile.role === "collector" && collectorProfileExists) {
     collectorDiscovery = await getCollectorDiscovery();
+    collectorActiveRecoveries = await getCollectorActiveRecoveries();
+  }
+
+  let processorProfileExists = false;
+
+  if (profile.role === "processor") {
+    const supabase = await createSupabaseServerClient();
+
+    const { data } = await supabase
+      .from("processor_profiles")
+      .select("id")
+      .eq("user_id", profile.id)
+      .maybeSingle();
+
+    processorProfileExists = Boolean(data);
+  }
+
+  let processorDiscovery = null;
+
+  if (profile.role === "processor" && processorProfileExists) {
+    processorDiscovery = await getProcessorDiscovery();
   }
 
   return (
@@ -148,17 +175,43 @@ export default async function DashboardPage() {
             <GeneratorWasteListings generatorId={profile.id} />
           </div>
         ) : profile.role === "collector" ? (
-          collectorProfileExists && collectorDiscovery ? (
-            <CollectorDiscovery
-              items={collectorDiscovery.items}
+          collectorProfileExists &&
+          collectorDiscovery &&
+          collectorActiveRecoveries ? (
+            <div className="space-y-8">
+              <CollectorDiscovery
+                items={collectorDiscovery.items}
+                loadError={
+                  collectorDiscovery.success
+                    ? undefined
+                    : collectorDiscovery.message
+                }
+              />
+
+              <CollectorActiveRecoveries
+                items={collectorActiveRecoveries.items}
+                loadError={
+                  collectorActiveRecoveries.success
+                    ? undefined
+                    : collectorActiveRecoveries.message
+                }
+              />
+            </div>
+          ) : (
+            <CollectorProfileSetup />
+          )
+        ) : profile.role === "processor" ? (
+          processorProfileExists && processorDiscovery ? (
+            <ProcessorDiscovery
+              items={processorDiscovery.items}
               loadError={
-                collectorDiscovery.success
+                processorDiscovery.success
                   ? undefined
-                  : collectorDiscovery.message
+                  : processorDiscovery.message
               }
             />
           ) : (
-            <CollectorProfileSetup />
+            <ProcessorProfileSetup />
           )
         ) : (
           <section className="border border-[#d9dfd3] bg-white p-6 sm:p-8">
