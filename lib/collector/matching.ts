@@ -1,7 +1,5 @@
 import type {
-  CollectorAvailability,
   CollectorProfile,
-  MaterialCategory,
   MatchReason,
   MatchRecommendation,
   WasteListing,

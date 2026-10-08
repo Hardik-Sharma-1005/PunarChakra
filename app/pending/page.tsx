@@ -42,7 +42,7 @@ export default async function PendingPage() {
           <div className="mt-6 border border-[#e8e0c9] bg-[#fbf8ed] p-4 text-left">
             <p className="text-sm font-semibold">What happens next?</p>
             <p className="mt-1 text-sm leading-6 text-[#66756a]">
-              Your account is awaiting review. Once approved, you'll be able
+              Your account is awaiting review. Once approved, you&apos;ll be able
               to access the platform according to your assigned role.
             </p>
           </div>

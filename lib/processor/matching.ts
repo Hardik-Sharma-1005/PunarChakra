@@ -1,6 +1,5 @@
 import type {
   MatchReason,
-  MaterialCategory,
   ProcessorProfile,
   WasteListing,
 } from "@/types/domain";
