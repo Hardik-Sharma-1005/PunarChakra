@@ -1,26 +1,200 @@
-@import "tailwindcss";
+@import 'tailwindcss';
 
+@custom-variant dark (&:is(.dark *));
+
+/*
+ * PUNARCHAKRA DESIGN TOKENS
+ * Strict six-color brand palette:
+ * Deep Black: #090b09
+ * Deep Forest: #0f3e1e
+ * Living Green: #1f6b3a
+ * Teal-Green: #42a878
+ * Warm White: #f0f2ed
+ * Soft Grey-Green: #aeb8aa
+ */
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  color-scheme: dark;
+
+  /* Core palette */
+  --pc-bg: #090b09;           /* Deep Black */
+  --pc-primary: #0f3e1e;      /* Deep Forest */
+  --pc-secondary: #1f6b3a;    /* Living Green */
+  --pc-accent: #42a878;       /* Teal-Green */
+  --pc-text: #f0f2ed;         /* Warm White */
+  --pc-secondary-text: #aeb8aa; /* Soft Grey-Green */
+
+  /* Derived UI tones - mixtures of the six approved colors only */
+  --pc-surface: color-mix(in oklab, var(--pc-bg) 90%, var(--pc-primary));
+  --pc-surface-raised: color-mix(in oklab, var(--pc-bg) 76%, var(--pc-primary));
+  --pc-line: color-mix(in oklab, var(--pc-text) 12%, transparent);
+  --pc-line-strong: color-mix(in oklab, var(--pc-text) 22%, transparent);
+  --pc-primary-bright: color-mix(in oklab, var(--pc-primary) 45%, var(--pc-secondary));
+  --pc-accent-bright: color-mix(in oklab, var(--pc-accent) 70%, var(--pc-text));
+  --pc-muted: color-mix(in oklab, var(--pc-secondary-text) 70%, var(--pc-bg));
+
+  /* Semantic mapping */
+  --background: var(--pc-bg);
+  --foreground: var(--pc-text);
+  --card: var(--pc-surface);
+  --card-foreground: var(--pc-text);
+  --popover: var(--pc-surface-raised);
+  --popover-foreground: var(--pc-text);
+  --primary: var(--pc-primary);
+  --primary-foreground: var(--pc-text);
+  --secondary: var(--pc-secondary);
+  --secondary-foreground: var(--pc-text);
+  --muted: var(--pc-surface-raised);
+  --muted-foreground: var(--pc-secondary-text);
+  --accent: var(--pc-accent);
+  --accent-foreground: var(--pc-bg);
+  --destructive: var(--pc-accent);
+  --border: var(--pc-line);
+  --input: var(--pc-line-strong);
+  --ring: var(--pc-accent);
+
+  --radius: 0.5rem;
+
+  /* Layout geometry */
+  --pc-content-max: 1280px;
+  --pc-gutter-mobile: 20px;
+  --pc-gutter-tablet: 24px;
+  --pc-gutter-desktop: 32px;
+  --pc-section-mobile: 96px;
+  --pc-section-desktop: 128px;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
+@media (min-width: 768px) {
   :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+    --pc-gutter-mobile: var(--pc-gutter-tablet);
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+@media (min-width: 1024px) {
+  :root {
+    --pc-gutter-mobile: var(--pc-gutter-desktop);
+  }
+}
+
+@theme inline {
+  --font-sans: var(--font-archivo), var(--font-devanagari), ui-sans-serif, system-ui, sans-serif;
+
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+
+  /* Brand utilities */
+  --color-surface: var(--pc-surface);
+  --color-surface-raised: var(--pc-surface-raised);
+  --color-line: var(--pc-line);
+  --color-line-strong: var(--pc-line-strong);
+  --color-primary-bright: var(--pc-primary-bright);
+  --color-accent-bright: var(--pc-accent-bright);
+  --color-subtle: var(--pc-muted);
+
+  --radius-sm: calc(var(--radius) * 0.6);
+  --radius-md: calc(var(--radius) * 0.8);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) * 1.4);
+  --radius-2xl: calc(var(--radius) * 1.8);
+  --radius-3xl: calc(var(--radius) * 2.2);
+  --radius-4xl: calc(var(--radius) * 2.6);
+}
+
+@layer base {
+  * {
+    border-color: var(--border);
+    outline-color: color-mix(in oklab, var(--ring) 50%, transparent);
+  }
+
+  html {
+    scroll-behavior: smooth;
+    scroll-padding-top: 5rem;
+  }
+
+  body {
+    background-color: var(--background);
+    color: var(--foreground);
+    font-family: var(--font-sans);
+  }
+}
+
+@layer utilities {
+  .bg-grid {
+    background-image:
+      linear-gradient(to right, var(--pc-line) 1px, transparent 1px),
+      linear-gradient(to bottom, var(--pc-line) 1px, transparent 1px);
+    background-size: 56px 56px;
+  }
+
+  .bg-hatch {
+    background-image: repeating-linear-gradient(
+      135deg,
+      var(--pc-line) 0 1px,
+      transparent 1px 10px
+    );
+  }
+
+  .mask-fade-y {
+    mask-image: linear-gradient(
+      to bottom,
+      transparent,
+      black 15%,
+      black 85%,
+      transparent
+    );
+  }
+
+  .mask-fade-radial {
+    mask-image: radial-gradient(
+      ellipse at center,
+      black 30%,
+      transparent 75%
+    );
+  }
+
+  .text-balance {
+    text-wrap: balance;
+  }
+}
+
+@keyframes route-flow {
+  to {
+    stroke-dashoffset: -48;
+  }
+}
+
+.route-flow {
+  stroke-dasharray: 6 18;
+  animation: route-flow 1.6s linear infinite;
+}
+
+.route-flow-slow {
+  stroke-dasharray: 4 12;
+  animation: route-flow 3s linear infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .route-flow,
+  .route-flow-slow {
+    animation: none;
+  }
+
+  html {
+    scroll-behavior: auto;
+  }
 }

@@ -1,0 +1,256 @@
+.border-glow-card {
+  --glow-opacity: 0;
+  --glow-angle: -90deg;
+  --glow-x: 50%;
+  --glow-y: 50%;
+
+  position: relative;
+  isolation: isolate;
+
+  width: 100%;
+  min-height: 100%;
+
+  overflow: visible;
+
+  border: 1px solid rgba(240, 242, 237, 0.12);
+  border-radius: var(--border-radius);
+
+  background: var(--card-bg);
+
+  transition:
+    border-color 500ms ease,
+    box-shadow 500ms ease,
+    transform 500ms ease;
+}
+
+/* ------------------------------------------------ */
+/* Inner card                                       */
+/* ------------------------------------------------ */
+
+.border-glow-inner {
+  position: relative;
+  z-index: 2;
+
+  width: 100%;
+  height: 100%;
+
+  overflow: hidden;
+
+  border-radius: var(--border-radius);
+
+  background: var(--card-bg);
+}
+
+/* ------------------------------------------------ */
+/* Base subtle border                               */
+/* ------------------------------------------------ */
+
+.border-glow-card::before {
+  content: '';
+
+  position: absolute;
+  inset: 0;
+
+  z-index: 0;
+
+  pointer-events: none;
+
+  border-radius: inherit;
+
+  padding: 1px;
+
+  background:
+    linear-gradient(
+      var(--glow-angle),
+      rgba(15, 62, 30, 0.7),
+      rgba(31, 107, 58, 0.45),
+      rgba(66, 168, 120, 0.35),
+      rgba(240, 242, 237, 0.08)
+    );
+
+  opacity: 0.45;
+
+  mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+
+  -webkit-mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+
+  transition:
+    opacity 500ms ease,
+    background 500ms ease;
+}
+
+/* ------------------------------------------------ */
+/* Soft background glow                             */
+/* ------------------------------------------------ */
+
+.border-glow-card::after {
+  content: '';
+
+  position: absolute;
+  inset: -1px;
+
+  z-index: -1;
+
+  pointer-events: none;
+
+  border-radius: inherit;
+
+  background:
+    radial-gradient(
+      circle at var(--glow-x) var(--glow-y),
+      rgba(15, 62, 30, 0.28),
+      rgba(31, 107, 58, 0.12) 28%,
+      transparent 65%
+    );
+
+  opacity: calc(var(--glow-opacity) * 0.7);
+
+  filter: blur(22px);
+
+  transition: opacity 300ms ease;
+}
+
+/* ------------------------------------------------ */
+/* Edge light                                       */
+/* ------------------------------------------------ */
+
+.edge-light {
+  position: absolute;
+
+  inset: calc(var(--glow-padding) * -1);
+
+  z-index: -1;
+
+  pointer-events: none;
+
+  border-radius: calc(
+    var(--border-radius) + var(--glow-padding)
+  );
+
+  background:
+    conic-gradient(
+      from var(--glow-angle),
+      transparent 0deg,
+      rgb(var(--glow-color-1)) 18deg,
+      rgb(var(--glow-color-2)) 32deg,
+      rgb(var(--glow-color-3)) 46deg,
+      transparent 68deg
+    );
+
+  opacity: var(--glow-opacity);
+
+  filter: blur(14px);
+
+  transform: translateZ(0);
+
+  transition:
+    opacity 250ms ease,
+    filter 250ms ease;
+}
+
+/* ------------------------------------------------ */
+/* Stronger animated glow                           */
+/* ------------------------------------------------ */
+
+.border-glow-card.sweep-active .edge-light {
+  opacity: max(var(--glow-opacity), 0.65);
+
+  filter: blur(12px);
+
+  box-shadow:
+    0 0 6px rgba(15, 62, 30, 0.7),
+    0 0 14px rgba(31, 107, 58, 0.5),
+    0 0 28px rgba(66, 168, 120, 0.35);
+}
+
+.border-glow-card.sweep-active::before {
+  opacity: 0.9;
+}
+
+/* ------------------------------------------------ */
+/* Cursor interaction                               */
+/* ------------------------------------------------ */
+
+.border-glow-card:hover {
+  border-color: rgba(240, 242, 237, 0.22);
+
+  box-shadow:
+    0 0 0 1px rgba(240, 242, 237, 0.03),
+    0 12px 40px rgba(0, 0, 0, 0.18);
+}
+
+.border-glow-card:hover .edge-light {
+  opacity: max(var(--glow-opacity), 0.35);
+}
+
+/* ------------------------------------------------ */
+/* Brand glow colors                                */
+/* ------------------------------------------------ */
+
+.border-glow-card {
+  --glow-color-1: 15 62 30;   /* Deep Forest */
+  --glow-color-2: 31 107 58;  /* Living Green */
+  --glow-color-3: 66 168 120; /* Teal-Green */
+}
+
+/* ------------------------------------------------ */
+/* Light surface compatibility                     */
+/* ------------------------------------------------ */
+
+.border-glow-card--light {
+  background: #f0f2ed;
+}
+
+.border-glow-card--light .border-glow-inner {
+  background: #f0f2ed;
+}
+
+/* ------------------------------------------------ */
+/* Mobile                                          */
+/* ------------------------------------------------ */
+
+@media (max-width: 768px) {
+  .border-glow-card {
+    border-radius: 18px;
+  }
+
+  .border-glow-inner {
+    border-radius: 18px;
+  }
+
+  .edge-light {
+    filter: blur(10px);
+  }
+
+  .border-glow-card.sweep-active .edge-light {
+    filter: blur(9px);
+
+    box-shadow:
+      0 0 8px rgba(15, 62, 30, 0.5),
+      0 0 20px rgba(31, 107, 58, 0.25);
+  }
+}
+
+/* ------------------------------------------------ */
+/* Reduced motion                                   */
+/* ------------------------------------------------ */
+
+@media (prefers-reduced-motion: reduce) {
+  .border-glow-card,
+  .border-glow-card::before,
+  .border-glow-card::after,
+  .edge-light {
+    transition: none;
+  }
+
+  .border-glow-card.sweep-active .edge-light {
+    opacity: 0.4;
+  }
+}
