@@ -1,3 +1,7 @@
+<img width="12315" height="9915" alt="PunarChakra_workflow_gitdiagram" src="https://github.com/user-attachments/assets/780fb53c-8873-4a52-86e5-8d3ce6bc5334" />
+
+
+
 # PunarChakra ♻️
 
 **PunarChakra** is a role-based marketplace for coordinating the recovery and reuse of construction and demolition (C&D) waste.
