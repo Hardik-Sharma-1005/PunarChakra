@@ -23,16 +23,17 @@ export function BrandLogo({
       )}
       aria-label="Punarchakra Home"
     >
-      <div className="relative h-10 w-auto aspect-[180/48] flex items-center">
-        <Image
-          src="/brand/punarchakra-logo.png"
-          alt="Punarchakra"
-          width={180}
-          height={48}
-          priority={priority}
-          className="h-10 w-auto object-contain"
-        />
-      </div>
+     
+<div className="relative h-20 w-auto aspect-[180/48] flex items-center">
+  <Image
+    src="/brand/punarchakra-logo.png"
+    alt="Punarchakra"
+    width={200}
+    height={68}
+    priority={priority}
+    className="h-24 w-auto object-contain"
+  />
+</div>
     </Link>
   )
 }

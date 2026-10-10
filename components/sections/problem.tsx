@@ -1,3 +1,4 @@
+
 'use client'
 
 import { useEffect, useRef, useState } from 'react'
@@ -26,14 +27,11 @@ export function Problem() {
   const rotationStart = useRef(0)
 
   const count = t.problem.steps.length
-  const angleStep = 360 / count
+  const angleStep = count > 0 ? 360 / count : 0
 
-  /* =========================================================
-     AUTO ROTATION
-     ========================================================= */
-
+  // Automatically rotate through the problem cards.
   useEffect(() => {
-    if (dragging) return
+    if (dragging || count === 0) return
 
     const interval = window.setInterval(() => {
       setActiveIndex((current) => {
@@ -46,34 +44,34 @@ export function Problem() {
     return () => window.clearInterval(interval)
   }, [count, angleStep, dragging])
 
-  /* =========================================================
-     SELECT CARD
-     ========================================================= */
-
+  // Select a card.
   const selectCard = (index: number) => {
     setActiveIndex(index)
     setRotation(-index * angleStep)
   }
 
-  /* =========================================================
-     DRAG GESTURE
-     ========================================================= */
-
-  const handlePointerDown = (event: React.PointerEvent<HTMLDivElement>) => {
+  // Drag interaction.
+  const handlePointerDown = (
+    event: React.PointerEvent<HTMLDivElement>
+  ) => {
     setDragging(true)
     dragStart.current = event.clientX
     rotationStart.current = rotation
     event.currentTarget.setPointerCapture(event.pointerId)
   }
 
-  const handlePointerMove = (event: React.PointerEvent<HTMLDivElement>) => {
+  const handlePointerMove = (
+    event: React.PointerEvent<HTMLDivElement>
+  ) => {
     if (!dragging || dragStart.current === null) return
+
     const delta = event.clientX - dragStart.current
     setRotation(rotationStart.current + delta * 0.35)
   }
 
   const handlePointerUp = () => {
-    if (!dragging) return
+    if (!dragging || count === 0) return
+
     setDragging(false)
 
     const normalized = ((rotation % 360) + 360) % 360
@@ -94,10 +92,6 @@ export function Problem() {
       <SectionWaves variant="subtle" />
 
       <div className="relative z-10 mx-auto w-full max-w-7xl px-5 md:px-8">
-        {/* =====================================================
-            SECTION HEADING
-            ===================================================== */}
-
         <Reveal>
           <SectionHeading
             id="problem-title"
@@ -107,63 +101,37 @@ export function Problem() {
           />
         </Reveal>
 
-        {/* =====================================================
-            CIRCULAR CAROUSEL
-            ===================================================== */}
-
+        {/* Circular carousel */}
         <div
           className="
-            relative
-            mx-auto
-            mt-16
-            flex
-            h-[720px]
-            w-full
-            max-w-[1200px]
-            items-center
-            justify-center
-            overflow-visible
-            md:mt-20
-            md:h-[780px]
+            relative mx-auto mt-16 flex h-[720px] w-full
+            max-w-[1200px] items-center justify-center
+            overflow-visible md:mt-20 md:h-[780px]
           "
         >
-          {/* Ambient Center Glow */}
+          {/* Ambient center glow */}
           <div
             aria-hidden="true"
             className="
-              pointer-events-none
-              absolute
-              left-1/2
-              top-1/2
-              h-[420px]
-              w-[420px]
-              -translate-x-1/2
-              -translate-y-1/2
-              rounded-full
-              bg-[#0f3e1e]/20
-              blur-[100px]
+              pointer-events-none absolute left-1/2 top-1/2
+              h-[420px] w-[420px] -translate-x-1/2
+              -translate-y-1/2 rounded-full
+              bg-[#0f3e1e]/20 blur-[100px]
             "
           />
 
-          {/* Orbit Ring */}
+          {/* Orbit ring */}
           <div
             aria-hidden="true"
             className="
-              pointer-events-none
-              absolute
-              left-1/2
-              top-1/2
-              h-[430px]
-              w-[430px]
-              -translate-x-1/2
-              -translate-y-1/2
-              rounded-full
-              border
-              border-[#1f6b3a]/20
+              pointer-events-none absolute left-1/2 top-1/2
+              h-[430px] w-[430px] -translate-x-1/2
+              -translate-y-1/2 rounded-full
+              border border-[#1f6b3a]/20
             "
           />
 
-          {/* Center Interaction Area */}
+          {/* Card interaction area */}
           <div
             className={cn(
               'absolute left-1/2 top-1/2 h-[520px] w-full -translate-x-1/2 -translate-y-1/2 overflow-visible touch-pan-y select-none',
@@ -174,7 +142,6 @@ export function Problem() {
             onPointerUp={handlePointerUp}
             onPointerCancel={handlePointerUp}
           >
-            {/* CARDS */}
             {t.problem.steps.map((step, index) => {
               const relativeAngle = index * angleStep + rotation
               const radians = (relativeAngle * Math.PI) / 180
@@ -189,7 +156,8 @@ export function Problem() {
 
               const scale = isActive ? 1 : 0.78 + depth * 0.08
               const opacity = isActive ? 1 : 0.35 + depth * 0.35
-              const zIndex = Math.round(depth * 100) + (isActive ? 100 : 0)
+              const zIndex =
+                Math.round(depth * 100) + (isActive ? 100 : 0)
 
               return (
                 <div
@@ -211,9 +179,7 @@ export function Problem() {
                       `,
                   }}
                   onClick={() => {
-                    if (!dragging) {
-                      selectCard(index)
-                    }
+                    if (!dragging) selectCard(index)
                   }}
                 >
                   <BorderGlow
@@ -222,43 +188,23 @@ export function Problem() {
                     glowRadius={isActive ? 30 : 18}
                     animated={isActive}
                     colors={['#0f3e1e', '#1f6b3a', '#42a878']}
-                    fillOpacity={isActive ? 0.3 : 0.12}
+                    fillOpacity={isActive ? 0.12 : 0.04}
                     borderRadius={24}
                     className={cn(
                       'overflow-hidden transition-all duration-700',
-                      isActive && 'shadow-[0_0_55px_rgba(66,168,120,0.20)]'
+                      isActive &&
+                        'shadow-[0_0_55px_rgba(66,168,120,0.20)]'
                     )}
                   >
                     <div className="flex min-h-[430px] flex-col">
-                      {/* Illustration Container */}
-                      <div
-                        className={cn(
-                          'relative flex h-[235px] items-center justify-center overflow-hidden px-6 pt-6 transition-all duration-700',
-                          isActive ? 'bg-[#0f3e1e]/[0.12]' : 'bg-transparent'
-                        )}
-                      >
-                        <div
-                          aria-hidden="true"
-                          className={cn(
-                            'pointer-events-none absolute inset-0 transition-opacity duration-1000',
-                            isActive ? 'opacity-100' : 'opacity-0'
-                          )}
-                          style={{
-                            background:
-                              'radial-gradient(circle at center, rgba(66,168,120,0.16), transparent 62%)',
-                          }}
-                        />
-
+                      {/* Illustration container */}
+                      <div className="relative flex h-[235px] items-center justify-center overflow-hidden bg-[#e8e8e0] px-6 pt-6">
                         <img
-                          src={ILLUSTRATIONS[index]}
+                          src={ILLUSTRATIONS[index % ILLUSTRATIONS.length]}
                           alt=""
                           aria-hidden="true"
-                          className={cn(
-                            'relative z-10 h-full w-full object-contain transition-all duration-1000',
-                            isActive
-                              ? 'scale-105 opacity-100 drop-shadow-[0_0_30px_rgba(66,168,120,0.30)]'
-                              : 'scale-100 opacity-45'
-                          )}
+                          draggable={false}
+                          className="relative z-10 h-full w-full object-contain opacity-100"
                         />
 
                         <span
@@ -272,18 +218,22 @@ export function Problem() {
                         />
                       </div>
 
-                      {/* Content */}
+                      {/* Card content */}
                       <div
                         className={cn(
                           'relative flex flex-1 flex-col border-t border-line/60 px-6 py-6 transition-all duration-700',
-                          isActive ? 'bg-[#0f3e1e]/[0.08]' : 'bg-transparent'
+                          isActive
+                            ? 'bg-[#0f3e1e]/[0.08]'
+                            : 'bg-transparent'
                         )}
                       >
                         <div className="flex items-start gap-4">
                           <p
                             className={cn(
                               'pt-1 text-xs font-semibold tracking-[0.2em] tabular-nums transition-colors duration-700',
-                              isActive ? 'text-[#42a878]' : 'text-muted-foreground'
+                              isActive
+                                ? 'text-[#42a878]'
+                                : 'text-muted-foreground'
                             )}
                           >
                             {String(index + 1).padStart(2, '0')}
@@ -321,7 +271,7 @@ export function Problem() {
             })}
           </div>
 
-          {/* Indicators */}
+          {/* Carousel indicators */}
           <div className="absolute bottom-8 left-1/2 z-[200] flex -translate-x-1/2 items-center gap-2">
             {t.problem.steps.map((_, index) => (
               <button

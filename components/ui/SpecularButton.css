@@ -65,9 +65,9 @@
 }
 
 .specular-button--lg {
-  font-size: 1rem;
-  padding: 0 28px;
-  min-height: 56px;
+  font-size: 1.8rem;
+  padding:22px 48px;
+  min-height: 76px;
 }
 
 .specular-button__fx {

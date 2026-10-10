@@ -1,3 +1,4 @@
+
 'use client'
 
 import { Reveal } from '@/components/motion/primitives'
@@ -40,9 +41,7 @@ export function Streams() {
       <SectionWaves variant="subtle" />
 
       <div className="relative z-10 mx-auto w-full max-w-7xl px-5 md:px-8">
-        {/* =====================================================
-            SECTION HEADING
-            ===================================================== */}
+        {/* SECTION HEADING */}
         <Reveal>
           <SectionHeading
             id="streams-title"
@@ -51,18 +50,16 @@ export function Streams() {
           />
         </Reveal>
 
-        {/* =====================================================
-            TWO WASTE STREAMS
-            ===================================================== */}
-        <div className="mx-auto mt-16 grid max-w-6xl gap-12 md:mt-20 md:grid-cols-2 md:gap-14">
+        {/* TWO WASTE STREAMS */}
+        <div className="mx-auto mt-16 grid max-w-6xl grid-cols-1 items-stretch gap-12 md:mt-20 md:grid-cols-2 md:gap-14">
           {streamCards.map(({ data, image, preset, index }, cardIdx) => (
             <Reveal
               key={data.title}
               delay={cardIdx * 0.15}
-              className="flex flex-col items-center"
+              className="flex h-full flex-col items-center"
             >
               {/* Holo Card Container */}
-              <div className="relative flex justify-center">
+              <div className="relative flex w-full justify-center">
                 <HoloCard
                   image={image}
                   alt={data.alt || data.title}
@@ -75,34 +72,37 @@ export function Streams() {
               </div>
 
               {/* Card information */}
-              <div className="mt-8 w-full max-w-md text-center md:text-left">
+              <div className="mt-8 flex w-full max-w-md flex-1 flex-col text-center md:text-left">
                 <div className="mb-3 flex items-center justify-center gap-3 md:justify-start">
                   <span className="h-px w-8 bg-teal/60" />
-                  <span className="text-[10px] font-semibold uppercase tracking-[0.24em] text-teal">
+
+                  <span className="text-sm font-semibold uppercase tracking-[0.24em] text-teal">
                     {data.label || String(index).padStart(2, '0')}
                   </span>
+
                   <span className="h-px w-8 bg-teal/60" />
                 </div>
 
-                <h3 className="text-2xl font-semibold tracking-tight text-warm md:text-3xl">
+                <h3 className="text-3xl font-semibold tracking-tight text-warm md:text-4xl">
                   {data.title}
                 </h3>
 
-                <p className="mt-3 text-sm leading-relaxed text-soft md:text-base">
+                <p className="mt-3 text-lg leading-relaxed text-soft md:text-xl">
                   {data.desc}
                 </p>
 
                 {/* Material items */}
                 {data.items && data.items.length > 0 && (
                   <div className="mt-6 rounded-xl border border-line bg-surface/40 p-4 backdrop-blur-sm">
-                    <span className="text-[11px] font-semibold uppercase tracking-[0.16em] text-soft">
+                    <span className="text-base font-semibold uppercase tracking-[0.16em] text-soft">
                       Included materials
                     </span>
+
                     <div className="mt-2.5 flex flex-wrap gap-2">
                       {data.items.map((item) => (
                         <span
                           key={item}
-                          className="rounded-md border border-line bg-background/60 px-2.5 py-1 text-xs text-soft"
+                          className="rounded-md border border-line bg-background/60 px-3 py-1.5 text-base text-soft"
                         >
                           {item}
                         </span>
@@ -114,17 +114,18 @@ export function Streams() {
                 {/* Outputs / Can become */}
                 {data.outputs && data.outputs.length > 0 && (
                   <div className="mt-4 rounded-xl border border-teal/20 bg-forest/20 p-4 backdrop-blur-sm">
-                    <span className="inline-flex items-center gap-1.5 text-[11px] font-semibold uppercase tracking-[0.16em] text-teal">
-                      <ArrowRight className="size-3" />
+                    <span className="inline-flex items-center gap-1.5 text-base font-semibold uppercase tracking-[0.16em] text-teal">
+                      <ArrowRight className="size-4" />
                       {s.becomes || 'Can become'}
                     </span>
+
                     <div className="mt-2.5 flex flex-wrap gap-2">
                       {data.outputs.map((out) => (
                         <span
                           key={out}
-                          className="inline-flex items-center gap-1 rounded-md border border-teal/30 bg-teal/10 px-2.5 py-1 text-xs font-medium text-warm"
+                          className="inline-flex items-center gap-1 rounded-md border border-teal/30 bg-teal/10 px-3 py-1.5 text-base font-medium text-warm"
                         >
-                          <CheckCircle2 className="size-3 text-teal" />
+                          <CheckCircle2 className="size-4 text-teal" />
                           {out}
                         </span>
                       ))}

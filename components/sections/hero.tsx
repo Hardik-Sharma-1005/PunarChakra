@@ -1,3 +1,4 @@
+
 'use client'
 
 import { motion } from '@/components/motion/primitives'
@@ -88,9 +89,8 @@ export function Hero() {
           ========================================================= */}
 
       <div className="pointer-events-none absolute inset-0 overflow-hidden">
-        {/* Soft background glows using strict brand palette */}
         <div className="absolute inset-0 z-0">
-          {/* Deep Forest glow */}
+          {/* Deep forest ambient glow */}
           <div
             className="
               absolute
@@ -100,12 +100,12 @@ export function Hero() {
               w-[70vw]
               -translate-x-1/2
               rounded-full
-              bg-[#0f3e1e]/20
+              bg-[#0f3e1e]/15
               blur-[120px]
             "
           />
 
-          {/* Teal-Green accent glow */}
+          {/* Subtle green accent glow */}
           <div
             className="
               absolute
@@ -114,12 +114,12 @@ export function Hero() {
               h-[42vh]
               w-[30vw]
               rounded-full
-              bg-[#42a878]/10
+              bg-[#42a878]/5
               blur-[120px]
             "
           />
 
-          {/* Living Green lower glow */}
+          {/* Lower ambient glow */}
           <div
             className="
               absolute
@@ -128,7 +128,7 @@ export function Hero() {
               h-[38vh]
               w-[32vw]
               rounded-full
-              bg-[#1f6b3a]/15
+              bg-[#1f6b3a]/10
               blur-[110px]
             "
           />
@@ -145,10 +145,7 @@ export function Hero() {
           />
         </div>
 
-        {/* =====================================================
-            POLYGON LUMINARY SVG (CONSTRAINED)
-            ===================================================== */}
-
+        {/* Polygon Luminary background */}
         <div
           className="
             pointer-events-none
@@ -172,6 +169,7 @@ export function Hero() {
 
         {/* =====================================================
             9-IMAGE STAIRCASE
+            Images retain their natural colours and brightness.
             ===================================================== */}
 
         <div
@@ -186,7 +184,7 @@ export function Hero() {
             w-full
             items-start
             justify-between
-            opacity-75
+            opacity-100
           "
         >
           {heroSteps.map((image, index) => (
@@ -219,7 +217,7 @@ export function Hero() {
                 ${columnHeights[index]}
               `}
             >
-              {/* IMAGE */}
+              {/* Image: no green blend or extra dark tint */}
               <div
                 className="
                   absolute
@@ -227,44 +225,27 @@ export function Hero() {
                   bg-cover
                   bg-top
                   bg-no-repeat
-                  brightness-[0.72]
-                  contrast-[1.08]
+                  brightness-[1.12]
+                  contrast-[1.05]
                 "
                 style={{
-                  backgroundImage: `url(${image})`,
+                  backgroundImage: `url("${image}")`,
                 }}
               />
 
-              {/* OVERLAYS */}
+              {/* Gentle top-to-bottom fade for text readability */}
               <div
                 className="
                   absolute
                   inset-0
                   bg-gradient-to-b
-                  from-[#090b09]/40
+                  from-[#090b09]/15
                   via-transparent
-                  to-[#090b09]
+                  to-[#090b09]/70
                 "
               />
 
-              <div
-                className="
-                  absolute
-                  inset-0
-                  bg-[#0f3e1e]/25
-                  mix-blend-multiply
-                "
-              />
-
-              <div
-                className="
-                  absolute
-                  inset-0
-                  bg-[#090b09]/30
-                "
-              />
-
-              {/* COLUMN SEPARATOR */}
+              {/* Subtle column separator */}
               <div
                 className="
                   absolute
@@ -274,7 +255,7 @@ export function Hero() {
                   w-px
                   bg-gradient-to-b
                   from-transparent
-                  via-[#42a878]/15
+                  via-[#42a878]/20
                   to-transparent
                 "
               />
@@ -283,8 +264,9 @@ export function Hero() {
         </div>
 
         {/* =====================================================
-          DARK OVERLAY
-          ===================================================== */}
+            GLOBAL READABILITY OVERLAY
+            Reduced darkness to preserve image visibility.
+            ===================================================== */}
 
         <div
           className="
@@ -293,9 +275,9 @@ export function Hero() {
             inset-0
             z-[2]
             bg-gradient-to-b
-            from-[#090b09]/85
-            via-[#090b09]/80
-            to-[#090b09]
+            from-[#090b09]/35
+            via-[#090b09]/25
+            to-[#090b09]/80
           "
         />
 
@@ -305,7 +287,7 @@ export function Hero() {
             absolute
             inset-0
             z-[2]
-            bg-[radial-gradient(circle_at_center,rgba(9,11,9,0.3)_0%,rgba(9,11,9,0.92)_75%)]
+            bg-[radial-gradient(ellipse_at_center,rgba(9,11,9,0.08)_0%,rgba(9,11,9,0.55)_100%)]
           "
         />
       </div>
@@ -315,10 +297,7 @@ export function Hero() {
           ========================================================= */}
 
       <div className="relative z-10 flex min-h-screen w-full flex-col">
-        {/* =====================================================
-            PERSISTENT TOP NAVIGATION
-            ===================================================== */}
-
+        {/* Navigation */}
         <nav
           aria-label="Primary"
           className="
@@ -333,10 +312,7 @@ export function Hero() {
             md:px-10
           "
         >
-          {/* =================================================
-              BRAND LOGO (DOCKS TO TOP-LEFT)
-              ================================================= */}
-
+          {/* Brand logo */}
           <motion.div
             initial={{
               opacity: 0,
@@ -363,10 +339,7 @@ export function Hero() {
             <BrandLogo />
           </motion.div>
 
-          {/* =================================================
-              PILL NAV
-              ================================================= */}
-
+          {/* Pill navigation */}
           <motion.div
             initial={{
               opacity: 0,
@@ -392,30 +365,12 @@ export function Hero() {
           >
             <PillNav
               items={[
-                {
-                  label: 'Problem',
-                  href: '#problem',
-                },
-                {
-                  label: 'Solution',
-                  href: '#solution',
-                },
-                {
-                  label: 'Streams',
-                  href: '#streams',
-                },
-                {
-                  label: 'How It Works',
-                  href: '#how-it-works',
-                },
-                {
-                  label: 'Economics',
-                  href: '#economics',
-                },
-                {
-                  label: 'FAQ',
-                  href: '#faq',
-                },
+                { label: 'Problem', href: '#problem' },
+                { label: 'Solution', href: '#solution' },
+                { label: 'Streams', href: '#streams' },
+                { label: 'How It Works', href: '#how-it-works' },
+                { label: 'Economics', href: '#economics' },
+                { label: 'FAQ', href: '#faq' },
               ]}
               baseColor="#1f6b3a"
               pillColor="#090b09"
@@ -447,14 +402,11 @@ export function Hero() {
             className="
               mx-auto
               w-full
-              max-w-[min(760px,88vw)]
+              max-w-[min(1200px,96vw)]
               text-center
             "
           >
-            {/* =================================================
-                EYEBROW
-                ================================================= */}
-
+            {/* Eyebrow */}
             <motion.div
               {...rise(0)}
               className="
@@ -467,11 +419,7 @@ export function Hero() {
             >
               <span
                 aria-hidden="true"
-                className="
-                  h-px
-                  w-8
-                  bg-accent
-                "
+                className="h-px w-8 bg-accent"
               />
 
               <span
@@ -488,42 +436,40 @@ export function Hero() {
 
               <span
                 aria-hidden="true"
-                className="
-                  h-px
-                  w-8
-                  bg-accent
-                "
+                className="h-px w-8 bg-accent"
               />
             </motion.div>
 
-            {/* =================================================
-                MAIN HEADLINE
-                ================================================= */}
+           
+{/* Main headline */}
 
-            <motion.h1
-              {...rise(0.05)}
-              className="
-                mx-auto
-                max-w-[820px]
-                text-balance
-                text-[clamp(42px,5.2vw,76px)]
-                font-semibold
-                leading-[0.98]
-                tracking-[-0.045em]
-                text-[#f0f2ed]
-              "
-            >
-              {t.hero.titleA}
-              <br />
-              <span className="text-[#aeb8aa]">
-                {t.hero.titleB}
-              </span>
-            </motion.h1>
+{/* Main headline */}
 
-            {/* =================================================
-                TRUE FOCUS TAGLINE
-                ================================================= */}
+{/* Main headline */}
+<motion.h1
+  {...rise(0.05)}
+  className="
+    mx-auto
+    w-full
+    max-w-[96vw]
+    text-center
+    text-[clamp(70px,8.5vw,164px)]
+    font-semibold
+    leading-[0.98]
+    tracking-[-0.045em]
+    text-[#f0f2ed]
+  "
+>
+  <span className="block">Waste isn't</span>
+  <span className="block">worthless.</span>
+  <span className="block text-[#aeb8aa]">It just hasn't</span>
+  <span className="block text-[#aeb8aa]">found its next</span>
+  <span className="block text-[#aeb8aa]">destination.</span>
+</motion.h1>
 
+
+
+            {/* Tagline */}
             <motion.div
               {...rise(0.18)}
               className="
@@ -536,16 +482,12 @@ export function Hero() {
             >
               <span
                 aria-hidden="true"
-                className="
-                  h-0.5
-                  w-12
-                  bg-accent
-                "
+                className="h-0.5 w-12 bg-accent"
               />
 
               <div
                 className="
-                  text-[clamp(20px,2vw,30px)]
+                  text-[clamp(32px,3.5vw,45px)]
                   font-semibold
                   tracking-tight
                   text-accent-bright
@@ -556,25 +498,18 @@ export function Hero() {
 
               <span
                 aria-hidden="true"
-                className="
-                  h-0.5
-                  w-12
-                  bg-accent
-                "
+                className="h-0.5 w-12 bg-accent"
               />
             </motion.div>
 
-            {/* =================================================
-                DESCRIPTION
-                ================================================= */}
-
+            {/* Description */}
             <motion.p
               {...rise(0.25)}
               className="
                 mx-auto
                 mt-[clamp(16px,2vh,24px)]
                 max-w-[620px]
-                text-[clamp(13px,1vw,17px)]
+                text-[clamp(20px,1.6vw,24px)]
                 leading-7
                 text-[#aeb8aa]
               "
@@ -582,10 +517,7 @@ export function Hero() {
               {t.hero.desc}
             </motion.p>
 
-            {/* =================================================
-                GET STARTED & CTA
-                ================================================= */}
-
+            {/* Get started CTA */}
             <motion.div
               {...rise(0.34)}
               className="
@@ -594,43 +526,36 @@ export function Hero() {
                 justify-center
               "
             >
-              <div
-                className="
-                  overflow-hidden
-                  rounded-xl
-                  bg-[#1f6b3a]
-                "
-              >
-                <SpecularButton
-                  size="lg"
-                  radius={12}
-                  tint="#ffffff"
-                  tintOpacity={0.12}
-                  blur={0}
-                  textColor="#f0f2ed"
-                  lineColor="#f0f2ed"
-                  baseColor="#1f6b3a"
-                  intensity={1}
-                  shineSize={10}
-                  shineFade={40}
-                  thickness={1}
-                  speed={0.35}
-                  followMouse
-                  proximity={250}
-                  autoAnimate={false}
-                  onClick={() => openAuth('register')}
-                >
-                  {t.hero.primary}
-                </SpecularButton>
+              <div className="overflow-hidden rounded-xl bg-[#1f6b3a]">
+                
+<SpecularButton
+  size="lg"
+  radius={18}
+  tint="#ffffff"
+  tintOpacity={0.12}
+  blur={0}
+  textColor="#f0f2ed"
+  lineColor="#f0f2ed"
+  baseColor="#1f6b3a"
+  intensity={1}
+  shineSize={10}
+  shineFade={40}
+  thickness={1}
+  speed={0.35}
+  followMouse
+  proximity={250}
+  autoAnimate={false}
+  onClick={() => openAuth('register')}
+>
+  {t.hero.primary}
+</SpecularButton>
+
               </div>
             </motion.div>
           </div>
         </div>
 
-        {/* =====================================================
-            BOTTOM FADE
-            ===================================================== */}
-
+        {/* Bottom fade */}
         <div
           className="
             pointer-events-none
@@ -647,10 +572,7 @@ export function Hero() {
           "
         />
 
-        {/* =====================================================
-            BOTTOM TRANSITION LINE
-            ===================================================== */}
-
+        {/* Bottom transition line */}
         <div
           className="
             pointer-events-none

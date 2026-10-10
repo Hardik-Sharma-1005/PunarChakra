@@ -5,8 +5,8 @@
 }
 
 .pill-nav {
-  --nav-h: 42px;
-  --pill-pad-x: 18px;
+  --nav-h: 56px;
+  --pill-pad-x: 30px;
   --pill-gap: 3px;
 
   width: max-content;
@@ -72,7 +72,7 @@
 
   text-decoration: none;
 
-  font-size: 13px;
+  font-size: 21px;
   font-weight: 600;
 
   line-height: 1;

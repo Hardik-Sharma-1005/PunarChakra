@@ -1,13 +1,19 @@
+
 .holo-card {
   --mouse-x: 50%;
   --mouse-y: 50%;
+
   position: relative;
   display: block;
+  aspect-ratio: 3 / 4;
+  flex-shrink: 0;
   overflow: hidden;
   user-select: none;
   -webkit-user-select: none;
   transform-style: preserve-3d;
-  transition: transform 0.25s cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 0.3s ease;
+  transition:
+    transform 0.25s cubic-bezier(0.2, 0.8, 0.2, 1),
+    box-shadow 0.3s ease;
   background: #090b09;
   border: 1px solid rgba(240, 242, 237, 0.15);
   box-shadow: 0 16px 36px rgba(0, 0, 0, 0.45);
@@ -15,7 +21,9 @@
 
 .holo-card.is-hovered {
   border-color: rgba(66, 168, 120, 0.4);
-  box-shadow: 0 24px 50px rgba(0, 0, 0, 0.65), 0 0 24px rgba(66, 168, 120, 0.2);
+  box-shadow:
+    0 24px 50px rgba(0, 0, 0, 0.65),
+    0 0 24px rgba(66, 168, 120, 0.2);
 }
 
 .holo-card__image {
