@@ -9,8 +9,8 @@ import HoloCard from '@/components/ui/HoloCard'
 import { ArrowRight, CheckCircle2 } from 'lucide-react'
 
 const STREAM_IMAGES = [
-  '/illustrations/stream-agriculture.jpg',
-  '/illustrations/stream-construction.jpg',
+  '/images/waste-streams/crop-residue.png',
+  '/images/waste-streams/construction%20waste.png',
 ]
 
 export function Streams() {

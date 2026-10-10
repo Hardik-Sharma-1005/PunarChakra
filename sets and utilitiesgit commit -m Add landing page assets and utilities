@@ -1,0 +1,48 @@
+ backgrounds/Polygon Luminary.svg                   |   1 [32m+[m
+ backgrounds/Wave.svg                               |   1 [32m+[m
+ brand/punarchakra-logo.png                         | Bin [31m0[m -> [32m425126[m bytes
+ illustrations/problem-burned-dumped-piled.png      | Bin [31m0[m -> [32m239855[m bytes
+ illustrations/problem-no-convenient-option.png     | Bin [31m0[m -> [32m199659[m bytes
+ illustrations/problem-value-lost.png               | Bin [31m0[m -> [32m201471[m bytes
+ illustrations/problem-waste-generated.png          | Bin [31m0[m -> [32m241516[m bytes
+ illustrations/stream-agriculture.jpg               | Bin [31m0[m -> [32m596987[m bytes
+ illustrations/stream-construction.jpg              | Bin [31m0[m -> [32m806602[m bytes
+ images/hero steps/step-01.jpeg                     | Bin [31m0[m -> [32m147593[m bytes
+ images/hero steps/step-02.jpeg                     | Bin [31m0[m -> [32m118444[m bytes
+ images/hero steps/step-03.jpeg                     | Bin [31m0[m -> [32m150628[m bytes
+ images/hero steps/step-04.jpeg                     | Bin [31m0[m -> [32m88714[m bytes
+ images/hero steps/step-05.jpeg                     | Bin [31m0[m -> [32m132361[m bytes
+ images/hero steps/step-06.jpeg                     | Bin [31m0[m -> [32m113690[m bytes
+ images/hero steps/step-07.jpeg                     | Bin [31m0[m -> [32m72472[m bytes
+ images/hero steps/step-08.jpeg                     | Bin [31m0[m -> [32m61645[m bytes
+ images/hero steps/step-09.jpeg                     | Bin [31m0[m -> [32m108958[m bytes
+ images/stream-agri.png                             | Bin [31m0[m -> [32m1330325[m bytes
+ images/stream-cnd.png                              | Bin [31m0[m -> [32m1154405[m bytes
+ lib/content.ts                                     | 549 [32m+++++++++++++++++++++[m
+ lib/geometry.ts                                    |  18 [32m+[m
+ lib/utils.ts                                       |   6 [32m+[m
+ public/apple-icon.png                              | Bin [31m0[m -> [32m2626[m bytes
+ public/backgrounds/Polygon Luminary.svg            |   1 [32m+[m
+ public/backgrounds/Wave.svg                        |   1 [32m+[m
+ public/brand/punarchakra-logo.png                  | Bin [31m0[m -> [32m425126[m bytes
+ public/icon-dark-32x32.png                         | Bin [31m0[m -> [32m585[m bytes
+ public/icon-light-32x32.png                        | Bin [31m0[m -> [32m566[m bytes
+ public/icon.svg                                    |  26 [32m+[m
+ .../illustrations/problem-burned-dumped-piled.png  | Bin [31m0[m -> [32m239855[m bytes
+ .../illustrations/problem-no-convenient-option.png | Bin [31m0[m -> [32m199659[m bytes
+ public/illustrations/problem-value-lost.png        | Bin [31m0[m -> [32m201471[m bytes
+ public/illustrations/problem-waste-generated.png   | Bin [31m0[m -> [32m241516[m bytes
+ public/illustrations/stream-agriculture.jpg        | Bin [31m0[m -> [32m596987[m bytes
+ public/illustrations/stream-construction.jpg       | Bin [31m0[m -> [32m806602[m bytes
+ public/images/hero steps/step-01.jpeg              | Bin [31m0[m -> [32m147593[m bytes
+ public/images/hero steps/step-02.jpeg              | Bin [31m0[m -> [32m118444[m bytes
+ public/images/hero steps/step-03.jpeg              | Bin [31m0[m -> [32m150628[m bytes
+ public/images/hero steps/step-04.jpeg              | Bin [31m0[m -> [32m88714[m bytes
+ public/images/hero steps/step-05.jpeg              | Bin [31m0[m -> [32m132361[m bytes
+ public/images/hero steps/step-06.jpeg              | Bin [31m0[m -> [32m113690[m bytes
+ public/images/hero steps/step-07.jpeg              | Bin [31m0[m -> [32m72472[m bytes
+ public/images/hero steps/step-08.jpeg              | Bin [31m0[m -> [32m61645[m bytes
+ public/images/hero steps/step-09.jpeg              | Bin [31m0[m -> [32m108958[m bytes
+ public/images/stream-agri.png                      | Bin [31m0[m -> [32m1330325[m bytes
+ public/images/stream-cnd.png                       | Bin [31m0[m -> [32m1154405[m bytes
+ 47 files changed, 603 insertions(+)

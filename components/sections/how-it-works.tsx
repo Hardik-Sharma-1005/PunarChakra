@@ -1,6 +1,6 @@
+
 'use client'
 
-import { useTransform } from 'motion/react'
 import {
   BadgeCheck,
   Calculator,
@@ -27,20 +27,35 @@ const ICONS = [
   BadgeCheck,
 ]
 
+const ROAD_PATH =
+  'M 70 150 H 700 C 755 150 755 230 700 230 H 420 C 365 230 365 310 420 310 H 1550 C 1605 310 1605 390 1550 390 H 1280 C 1225 390 1225 470 1280 470 H 1930'
+
+
+
+
+const ROAD_STOPS = [
+  { x: 280, y: 150, labelX: 160, labelY: -35 },
+  { x: 620, y: 150, labelX: 560, labelY: -35 },
+  { x: 500, y: 310, labelX: 360, labelY: 390 },
+  { x: 850, y: 310, labelX: 720, labelY: 390 },
+  { x: 1150, y: 310, labelX: 1010, labelY: 90 },
+  { x: 1500, y: 310, labelX: 1410, labelY: 90 },
+  { x: 1380, y: 470, labelX: 1300, labelY: 555 },
+  { x: 1730, y: 470, labelX: 1650, labelY: 555 },
+]
+
+
+
+
 export function HowItWorks() {
   const { t } = useSite()
   const steps = t.how.steps
-  const n = steps.length
+  const n = Math.min(steps.length, ROAD_STOPS.length)
 
   const { progress, active } = useLoopProgress(
     n * 1.6,
     n,
     (p) => Math.round(p * (n - 1)),
-  )
-
-  const left = useTransform(
-    progress,
-    (p) => `${((0.5 + p * (n - 1)) / n) * 100}%`,
   )
 
   return (
@@ -49,7 +64,7 @@ export function HowItWorks() {
       aria-labelledby="how-title"
       className="relative overflow-hidden border-t border-line bg-surface py-24 md:py-32"
     >
-      {/* Intelligence / routing background */}
+      {/* Original background */}
       <div
         aria-hidden="true"
         className="pointer-events-none absolute inset-0 z-0 overflow-hidden"
@@ -57,10 +72,9 @@ export function HowItWorks() {
         <img
           src="/backgrounds/Polygon%20Luminary.svg"
           alt=""
-          className="absolute left-1/2 top-1/2 max-h-full max-w-full -translate-x-1/2 -translate-y-1/2 object-contain opacity-[0.045] pointer-events-none"
+          className="pointer-events-none absolute left-1/2 top-1/2 max-h-full max-w-full -translate-x-1/2 -translate-y-1/2 object-contain opacity-[0.045]"
         />
 
-        {/* Subtle center glow */}
         <div
           className="absolute left-1/2 top-1/2 size-[420px] -translate-x-1/2 -translate-y-1/2 rounded-full opacity-[0.08] blur-3xl"
           style={{
@@ -71,7 +85,6 @@ export function HowItWorks() {
       </div>
 
       <div className="relative z-10 mx-auto w-full max-w-7xl px-5 md:px-8">
-        {/* Heading */}
         <Reveal>
           <SectionHeading
             id="how-title"
@@ -80,124 +93,236 @@ export function HowItWorks() {
           />
         </Reveal>
 
-        {/* Process route */}
         <Reveal delay={0.1} className="relative mt-16 md:mt-20">
-          {/* Desktop route */}
-          <div
-            aria-hidden="true"
-            className="absolute top-7 right-[6.25%] left-[6.25%] hidden h-px bg-line-strong lg:block"
-          />
-
-          {/* Animated route progress */}
-          <motion.span
-            aria-hidden="true"
-            className="absolute top-7 hidden h-px origin-left bg-accent-bright lg:block"
-            style={{
-              left: '6.25%',
-              width: useTransform(
-                progress,
-                (p) => `${(p * (n - 1) / n) * 87.5}%`,
-              ),
-            }}
-          />
-
-          {/* Moving intelligence marker */}
-          <motion.span
-            aria-hidden="true"
-            className="absolute top-7 hidden size-3.5 -translate-x-1/2 -translate-y-1/2 rounded-[3px] bg-accent-bright shadow-[0_0_0_6px_color-mix(in_oklab,var(--pc-accent-bright)_16%,transparent),0_0_24px_color-mix(in_oklab,var(--pc-accent-bright)_35%,transparent)] lg:block"
-            style={{ left }}
-          />
-
-          <ol className="grid gap-0 md:grid-cols-4 md:gap-y-14 lg:grid-cols-8 lg:gap-y-0">
-            {steps.map((step, i) => {
-              const Icon = ICONS[i]
-              const isActive = i === active
-
-              return (
-                <li
-                  key={step.title}
-                  className="relative flex gap-5 pb-9 md:flex-col md:items-center md:pb-0 md:text-center"
+          {/* Desktop road: original SVG geometry and styling preserved */}
+          <div className="relative hidden lg:block">
+            <svg
+              viewBox="0 0 2000 680"
+              className="h-auto w-full overflow-visible"
+              role="img"
+              aria-label="Eight stops on the PunarChakra waste recovery route"
+            >
+              <defs>
+                <filter
+                  id="point-glow"
+                  x="-300%"
+                  y="-300%"
+                  width="700%"
+                  height="700%"
                 >
-                  {/* Mobile connecting line */}
-                  {i < n - 1 && (
-                    <span
-                      aria-hidden="true"
-                      className="absolute bottom-0 left-7 top-14 w-px bg-line-strong md:hidden"
-                    />
-                  )}
+                  <feGaussianBlur stdDeviation="5" />
+                </filter>
+              </defs>
 
-                  {/* Tablet connecting lines */}
-                  {i % 4 !== 3 && (
-                    <span
-                      aria-hidden="true"
-                      className="absolute left-1/2 top-7 hidden h-px w-full bg-line-strong md:block lg:hidden"
-                    />
-                  )}
+              {/* Original road shadow */}
+              <path
+                d={ROAD_PATH}
+                fill="none"
+                stroke="#030804"
+                strokeWidth="78"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
 
-                  {/* Step node */}
-                  <motion.span
-                    className={cn(
-                      'relative z-10 flex size-14 shrink-0 items-center justify-center rounded-full border transition-all duration-500',
-                      isActive
-                        ? 'border-accent-bright bg-accent-bright text-background shadow-[0_0_0_6px_color-mix(in_oklab,var(--pc-accent-bright)_12%,transparent),0_0_28px_color-mix(in_oklab,var(--pc-accent-bright)_20%,transparent)]'
-                        : 'border-line-strong bg-background text-secondary',
-                    )}
-                    animate={
-                      isActive
-                        ? {
-                            scale: [1, 1.06, 1],
-                          }
-                        : {
-                            scale: 1,
-                          }
-                    }
-                    transition={{
-                      duration: 0.8,
-                      ease: 'easeOut',
-                    }}
+              {/* Original outer road edge */}
+              <path
+                d={ROAD_PATH}
+                fill="none"
+                stroke="#071b0d"
+                strokeWidth="68"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
+
+              {/* Original brand-green road */}
+              <path
+                d={ROAD_PATH}
+                fill="none"
+                stroke="#0f3e1e"
+                strokeWidth="58"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
+
+              {/* Original subtle road highlight */}
+              <path
+                d={ROAD_PATH}
+                fill="none"
+                stroke="#477f4d"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeDasharray="3 13"
+                opacity="0.9"
+              />
+
+              {/* Original centre markings */}
+              <path
+                d={ROAD_PATH}
+                fill="none"
+                stroke="#99a399"
+                strokeWidth="2.5"
+                strokeLinecap="round"
+                strokeDasharray="15 19"
+                opacity="0.85"
+              />
+
+              {/* Markers: title replaces number; no pulsing marker glow */}
+              {steps.slice(0, n).map((step, i) => {
+                const point = ROAD_STOPS[i]
+                const Icon = ICONS[i] ?? Route
+
+                return (
+                  <g key={step.title}>
+                    <circle
+                      cx={point.x}
+                      cy={point.y}
+                      r="34"
+                      fill="#090b09"
+                      stroke="#477f4d"
+                      strokeWidth="3"
+                    />
+
+                    <foreignObject
+                      x={point.x - 22}
+                      y={point.y - 22}
+                      width="44"
+                      height="44"
+                    >
+                      <div className="flex h-full w-full items-center justify-center text-[#f0f2ed]">
+                        <Icon size={28} aria-hidden="true" />
+                      </div>
+                    </foreignObject>
+                  </g>
+                )
+              })}
+
+              {/* One travelling light */}
+              <circle
+                r="19"
+                fill="#8acb78"
+                opacity="0.45"
+                filter="url(#point-glow)"
+              >
+                <animateMotion
+                  dur="18s"
+                  repeatCount="indefinite"
+                  rotate="auto"
+                >
+                  <mpath href="#animated-road-path" />
+                </animateMotion>
+              </circle>
+
+              <circle r="8" fill="#c5f4a7">
+                <animateMotion
+                  dur="18s"
+                  repeatCount="indefinite"
+                  rotate="auto"
+                >
+                  <mpath href="#animated-road-path" />
+                </animateMotion>
+              </circle>
+
+              {/* Same path as the original road */}
+              <path
+                id="animated-road-path"
+                d={ROAD_PATH}
+                fill="none"
+                stroke="none"
+              />
+            </svg>
+
+            {/* Content integrated into the map; no separate cards */}
+            <div className="pointer-events-none absolute inset-0">
+              {steps.slice(0, n).map((step, i) => {
+                const point = ROAD_STOPS[i]
+                const isActive = i === active
+
+                return (
+                  
+<motion.div
+  key={step.title}
+  className="absolute w-[18%] max-w-[280px] min-w-0 break-words"
+  style={{
+    left: `${(point.labelX / 2000) * 100}%`,
+    top: `${(point.labelY / 680) * 100}%`,
+  }}
+  animate={{ opacity: isActive ? 1 : 0.9 }}
+  transition={{ duration: 0.4 }}
+>
+  <h3
+    className="text-[19px] font-semibold tracking-tight xl:text-[22px]"
+    style={{
+      color: isActive ? '#a8d99b' : '#f0f2ed',
+    }}
+  >
+    {step.title}
+  </h3>
+
+  <p className="mt-1.5 max-w-full whitespace-normal break-words text-[15px] leading-relaxed text-[#99a399] xl:text-[17px]">
+    {step.desc}
+  </p>
+</motion.div>
+
+                )
+              })}
+            </div>
+          </div>
+
+          {/* Mobile: compact text integrated with the route */}
+          <div className="relative lg:hidden">
+            <div
+              aria-hidden="true"
+              className="absolute bottom-7 left-[27px] top-7 w-1 rounded-full bg-[#0f3e1e]"
+            />
+
+            <ol className="relative space-y-8">
+              {steps.slice(0, n).map((step, i) => {
+                const Icon = ICONS[i] ?? Route
+                const isActive = i === active
+
+                return (
+                  <motion.li
+                    key={step.title}
+                    className="relative flex gap-5"
+                    initial={{ opacity: 0, y: 12 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true, amount: 0.3 }}
+                    transition={{ duration: 0.45, delay: i * 0.04 }}
                   >
-                    <Icon className="size-5" aria-hidden="true" />
-                  </motion.span>
-
-                  {/* Step information */}
-                  <div className="pt-1.5 md:mt-5 md:px-2 md:pt-0">
-                    <p
-                      className={cn(
-                        'text-[10px] font-semibold tracking-[0.2em] tabular-nums transition-colors duration-500',
-                        isActive
-                          ? 'text-accent-bright'
-                          : 'text-muted-foreground',
-                      )}
+                    <span
+                      className="relative z-10 flex size-14 shrink-0 items-center justify-center rounded-full border-2 bg-[#090b09] text-[#f0f2ed] transition-colors duration-300"
+                      style={{
+                        borderColor: isActive ? '#a8d99b' : '#477f4d',
+                      }}
                     >
-                      {String(i + 1).padStart(2, '0')}
-                    </p>
+                      <Icon size={21} aria-hidden="true" />
+                    </span>
 
-                    <h3
-                      className={cn(
-                        'mt-1 text-base font-semibold tracking-tight transition-all duration-500 md:text-lg',
-                        isActive
-                          ? 'text-accent-bright'
-                          : 'text-foreground',
-                      )}
-                    >
-                      {step.title}
-                    </h3>
+                    <div className="min-w-0 flex-1 pt-1.5">
+                      <h3
+                        className="text-lg font-semibold"
+                        style={{
+                          color: isActive ? '#a8d99b' : '#f0f2ed',
+                        }}
+                      >
+                        {step.title}
+                      </h3>
 
-                    <p className="mt-1.5 text-sm leading-relaxed text-muted-foreground">
-                      {step.desc}
-                    </p>
-                  </div>
-                </li>
-              )
-            })}
-          </ol>
+                      <p className="mt-1.5 text-sm leading-relaxed text-[#99a399]">
+                        {step.desc}
+                      </p>
+                    </div>
+                  </motion.li>
+                )
+              })}
+            </ol>
+          </div>
         </Reveal>
 
-        {/* Process summary */}
         <Reveal delay={0.3}>
           <div className="mx-auto mt-14 max-w-3xl border-t border-line-strong pt-6 text-center">
             <p className="text-sm leading-relaxed text-muted-foreground md:text-base">
-              Punarchakra evaluates the material, finds realistic options,
+              PunarChakra evaluates the material, finds realistic options,
               compares their economics, coordinates the chosen route, and
               verifies the final destination.
             </p>

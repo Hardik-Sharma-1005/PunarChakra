@@ -2,6 +2,7 @@
 'use client'
 
 import { useEffect, useRef, useState } from 'react'
+import { ArrowLeft, ArrowRight } from 'lucide-react'
 import { Reveal } from '@/components/motion/primitives'
 import { SectionHeading } from '@/components/brand/brand'
 import { useSite } from '@/components/site/site-provider'
@@ -10,84 +11,109 @@ import { SectionWaves } from '@/components/backgrounds/SectionWaves'
 import { cn } from '@/lib/utils'
 
 const ILLUSTRATIONS = [
-  '/illustrations/problem-waste-generated.png',
-  '/illustrations/problem-no-convenient-option.png',
-  '/illustrations/problem-burned-dumped-piled.png',
-  '/illustrations/problem-value-lost.png',
+  '/images/problems/construction-waste.png',
+  '/images/problems/crop-residue-burning.png',
+  '/images/problems/uncollected-waste.png',
+  '/images/problems/waste-recovery-opportunity.png',
+]
+
+const PROBLEM_CONTEXT = [
+  {
+    label: 'CONSTRUCTION & DEMOLITION',
+    detail:
+      'Broken bricks, concrete, tiles and other construction materials accumulate when reliable collection and recovery options are difficult to access.',
+    impact:
+      'Recoverable materials are lost, while unmanaged debris takes up space and can damage the surrounding environment.',
+  },
+  {
+    label: 'AGRICULTURAL RESIDUE',
+    detail:
+      'After harvesting, farmers may have limited time, equipment or affordable options to collect and transport leftover crop residue.',
+    impact:
+      'When burning becomes the easiest available option, it contributes to harmful smoke and air pollution.',
+  },
+  {
+    label: 'COLLECTION & LOGISTICS',
+    detail:
+      'Waste generators and potential collectors often lack a straightforward way to discover one another and coordinate collection.',
+    impact:
+      'Waste can remain dumped or piled up when transport, storage and reliable buyers are unavailable.',
+  },
+  {
+    label: 'LOST ECONOMIC VALUE',
+    detail:
+      'Materials that could be reused or processed may be discarded when their quality, price, destination or transport costs are uncertain.',
+    impact:
+      'Generators miss potential earnings, and processors lose access to materials they could put to productive use.',
+  },
 ]
 
 export function Problem() {
   const { t } = useSite()
+  const steps = t.problem.steps
+  const count = Math.min(steps.length, ILLUSTRATIONS.length)
 
   const [activeIndex, setActiveIndex] = useState(0)
-  const [rotation, setRotation] = useState(0)
   const [dragging, setDragging] = useState(false)
 
   const dragStart = useRef<number | null>(null)
-  const rotationStart = useRef(0)
+  const dragDistance = useRef(0)
 
-  const count = t.problem.steps.length
-  const angleStep = count > 0 ? 360 / count : 0
-
-  // Automatically rotate through the problem cards.
   useEffect(() => {
-    if (dragging || count === 0) return
+    if (dragging || count <= 1) return
 
     const interval = window.setInterval(() => {
-      setActiveIndex((current) => {
-        const next = (current + 1) % count
-        setRotation(-next * angleStep)
-        return next
-      })
-    }, 3200)
+      setActiveIndex((current) => (current + 1) % count)
+    }, 6000)
 
     return () => window.clearInterval(interval)
-  }, [count, angleStep, dragging])
+  }, [count, dragging])
 
-  // Select a card.
   const selectCard = (index: number) => {
-    setActiveIndex(index)
-    setRotation(-index * angleStep)
+    if (count === 0) return
+    setActiveIndex((index + count) % count)
   }
 
-  // Drag interaction.
   const handlePointerDown = (
-    event: React.PointerEvent<HTMLDivElement>
+    event: React.PointerEvent<HTMLDivElement>,
   ) => {
-    setDragging(true)
+    if ((event.target as HTMLElement).closest('button')) return
+
     dragStart.current = event.clientX
-    rotationStart.current = rotation
+    dragDistance.current = 0
+    setDragging(true)
     event.currentTarget.setPointerCapture(event.pointerId)
   }
 
   const handlePointerMove = (
-    event: React.PointerEvent<HTMLDivElement>
+    event: React.PointerEvent<HTMLDivElement>,
   ) => {
-    if (!dragging || dragStart.current === null) return
+    if (dragStart.current === null) return
 
-    const delta = event.clientX - dragStart.current
-    setRotation(rotationStart.current + delta * 0.35)
+    dragDistance.current = event.clientX - dragStart.current
   }
 
   const handlePointerUp = () => {
-    if (!dragging || count === 0) return
+    if (dragStart.current === null) return
 
+    const distance = dragDistance.current
+
+    dragStart.current = null
+    dragDistance.current = 0
     setDragging(false)
 
-    const normalized = ((rotation % 360) + 360) % 360
-    const nearest = Math.round(-normalized / angleStep) % count
-    const index = (nearest + count) % count
-
-    setActiveIndex(index)
-    setRotation(-index * angleStep)
-    dragStart.current = null
+    if (Math.abs(distance) > 45) {
+      selectCard(activeIndex + (distance < 0 ? 1 : -1))
+    }
   }
+
+  if (count === 0) return null
 
   return (
     <section
       id="problem"
       aria-labelledby="problem-title"
-      className="relative overflow-visible border-t border-line py-24 md:py-32"
+      className="relative overflow-hidden border-t border-line py-20 md:py-28"
     >
       <SectionWaves variant="subtle" />
 
@@ -101,198 +127,184 @@ export function Problem() {
           />
         </Reveal>
 
-        {/* Circular carousel */}
-        <div
-          className="
-            relative mx-auto mt-16 flex h-[720px] w-full
-            max-w-[1200px] items-center justify-center
-            overflow-visible md:mt-20 md:h-[780px]
-          "
-        >
-          {/* Ambient center glow */}
-          <div
-            aria-hidden="true"
-            className="
-              pointer-events-none absolute left-1/2 top-1/2
-              h-[420px] w-[420px] -translate-x-1/2
-              -translate-y-1/2 rounded-full
-              bg-[#0f3e1e]/20 blur-[100px]
-            "
-          />
+        <Reveal delay={0.12}>
+          <div className="mx-auto mt-12 w-full max-w-5xl md:mt-16">
+            {/* Carousel header */}
+            <div className="mb-5 flex items-center justify-between gap-4">
+              <p className="text-xs font-semibold tracking-[0.2em] text-[#99a399] md:text-sm">
+                THE CHALLENGE
+              </p>
 
-          {/* Orbit ring */}
-          <div
-            aria-hidden="true"
-            className="
-              pointer-events-none absolute left-1/2 top-1/2
-              h-[430px] w-[430px] -translate-x-1/2
-              -translate-y-1/2 rounded-full
-              border border-[#1f6b3a]/20
-            "
-          />
+              <p
+                className="text-sm tabular-nums text-[#99a399]"
+                aria-live="polite"
+              >
+                {String(activeIndex + 1).padStart(2, '0')}
+                <span className="mx-2 text-[#477f4d]">/</span>
+                {String(count).padStart(2, '0')}
+              </p>
+            </div>
 
-          {/* Card interaction area */}
-          <div
-            className={cn(
-              'absolute left-1/2 top-1/2 h-[520px] w-full -translate-x-1/2 -translate-y-1/2 overflow-visible touch-pan-y select-none',
-              dragging ? 'cursor-grabbing' : 'cursor-grab'
-            )}
-            onPointerDown={handlePointerDown}
-            onPointerMove={handlePointerMove}
-            onPointerUp={handlePointerUp}
-            onPointerCancel={handlePointerUp}
-          >
-            {t.problem.steps.map((step, index) => {
-              const relativeAngle = index * angleStep + rotation
-              const radians = (relativeAngle * Math.PI) / 180
+            {/* Centered active card */}
+            <div
+              className={cn(
+                'relative mx-auto w-full touch-pan-y select-none',
+                dragging ? 'cursor-grabbing' : 'cursor-grab',
+              )}
+              onPointerDown={handlePointerDown}
+              onPointerMove={handlePointerMove}
+              onPointerUp={handlePointerUp}
+              onPointerCancel={handlePointerUp}
+            >
+              <div className="pointer-events-none absolute -inset-5 rounded-[36px] bg-[#0f3e1e]/15 opacity-70 blur-3xl" />
 
-              const radiusX = 320
-              const radiusY = 145
+              {steps.slice(0, count).map((step, index) => {
+                const isActive = index === activeIndex
+                const context = PROBLEM_CONTEXT[index]
 
-              const x = Math.sin(radians) * radiusX
-              const y = Math.cos(radians) * radiusY
-              const depth = (Math.cos(radians) + 1) / 2
-              const isActive = index === activeIndex
-
-              const scale = isActive ? 1 : 0.78 + depth * 0.08
-              const opacity = isActive ? 1 : 0.35 + depth * 0.35
-              const zIndex =
-                Math.round(depth * 100) + (isActive ? 100 : 0)
-
-              return (
-                <div
-                  key={step.title}
-                  className="absolute left-1/2 top-1/2 w-[min(360px,80vw)] -translate-x-1/2 -translate-y-1/2"
-                  style={{
-                    transform: `
-                      translate(-50%, -50%)
-                      translate3d(${x}px, ${y}px, 0)
-                      scale(${scale})
-                    `,
-                    opacity,
-                    zIndex,
-                    transition: dragging
-                      ? 'none'
-                      : `
-                        transform 850ms cubic-bezier(0.22, 1, 0.36, 1),
-                        opacity 850ms ease
-                      `,
-                  }}
-                  onClick={() => {
-                    if (!dragging) selectCard(index)
-                  }}
-                >
-                  <BorderGlow
-                    glowColor="66 168 120"
-                    glowIntensity={isActive ? 1.8 : 0.55}
-                    glowRadius={isActive ? 30 : 18}
-                    animated={isActive}
-                    colors={['#0f3e1e', '#1f6b3a', '#42a878']}
-                    fillOpacity={isActive ? 0.12 : 0.04}
-                    borderRadius={24}
+                return (
+                  <div
+                    key={step.title}
+                    aria-hidden={!isActive}
                     className={cn(
-                      'overflow-hidden transition-all duration-700',
-                      isActive &&
-                        'shadow-[0_0_55px_rgba(66,168,120,0.20)]'
+                      'relative w-full transition-[opacity,transform] duration-700 ease-out',
+                      isActive
+                        ? 'relative z-10 translate-y-0 scale-100 opacity-100'
+                        : 'pointer-events-none absolute inset-0 z-0 translate-y-3 scale-[0.985] opacity-0',
                     )}
                   >
-                    <div className="flex min-h-[430px] flex-col">
-                      {/* Illustration container */}
-                      <div className="relative flex h-[235px] items-center justify-center overflow-hidden bg-[#e8e8e0] px-6 pt-6">
-                        <img
-                          src={ILLUSTRATIONS[index % ILLUSTRATIONS.length]}
-                          alt=""
-                          aria-hidden="true"
-                          draggable={false}
-                          className="relative z-10 h-full w-full object-contain opacity-100"
-                        />
+                   
+<BorderGlow
+  glowColor="71 127 77"
+  glowIntensity={isActive ? 1.25 : 0}
+  glowRadius={isActive ? 24 : 0}
+  animated={isActive}
+  colors={['#0f3e1e', '#477f4d', '#6a692f']}
+  fillOpacity={0.07}
+  borderRadius={24}
+  className="overflow-hidden"
+>
 
-                        <span
-                          aria-hidden="true"
-                          className={cn(
-                            'absolute bottom-3 left-1/2 h-[2px] -translate-x-1/2 rounded-full transition-all duration-700',
-                            isActive
-                              ? 'w-16 bg-[#42a878] opacity-100 shadow-[0_0_12px_rgba(66,168,120,0.55)]'
-                              : 'w-0 opacity-0'
-                          )}
-                        />
-                      </div>
-
-                      {/* Card content */}
-                      <div
-                        className={cn(
-                          'relative flex flex-1 flex-col border-t border-line/60 px-6 py-6 transition-all duration-700',
-                          isActive
-                            ? 'bg-[#0f3e1e]/[0.08]'
-                            : 'bg-transparent'
-                        )}
-                      >
-                        <div className="flex items-start gap-4">
-                          <p
+                  
+                      <article className="grid min-h-0 grid-cols-1 overflow-hidden bg-[#090b09]/95 md:grid-cols-[0.95fr_1.05fr]">
+                        {/* Image */}
+                        <div className="relative min-h-[240px] overflow-hidden bg-[#111a12] sm:min-h-[320px] md:min-h-[440px]">
+                          <img
+                            src={ILLUSTRATIONS[index]}
+                            alt={context.label.toLowerCase()}
+                            draggable={false}
                             className={cn(
-                              'pt-1 text-xs font-semibold tracking-[0.2em] tabular-nums transition-colors duration-700',
-                              isActive
-                                ? 'text-[#42a878]'
-                                : 'text-muted-foreground'
+                              'absolute inset-0 h-full w-full object-cover transition-transform duration-1000',
+                              isActive ? 'scale-100' : 'scale-105',
                             )}
-                          >
+                          />
+
+                          <div className="absolute inset-0 bg-gradient-to-t from-[#090b09]/75 via-transparent to-[#090b09]/10" />
+
+                          <div className="absolute left-5 top-5 rounded-full border border-white/15 bg-[#090b09]/70 px-3 py-2 backdrop-blur-md md:left-7 md:top-7">
+                            <span className="text-[10px] font-semibold tracking-[0.16em] text-[#c5f4a7] md:text-xs">
+                              {context.label}
+                            </span>
+                          </div>
+
+                          <span className="absolute bottom-5 left-5 text-5xl font-semibold tracking-tight text-white/90 md:bottom-7 md:left-7 md:text-7xl">
                             {String(index + 1).padStart(2, '0')}
+                          </span>
+                        </div>
+
+                        {/* Content */}
+                        <div className="flex flex-col justify-center px-6 py-8 sm:px-8 sm:py-10 md:px-10 md:py-12">
+                          <p className="mb-4 text-xs font-semibold uppercase tracking-[0.2em] text-[#8acb78]">
+                            The problem
                           </p>
 
-                          <div className="min-w-0">
-                            <h3
-                              className={cn(
-                                'text-xl font-semibold leading-tight tracking-tight transition-all duration-700',
-                                isActive
-                                  ? 'translate-x-1 text-foreground'
-                                  : 'text-muted-foreground'
-                              )}
-                            >
-                              {step.title}
-                            </h3>
+                          <h3 className="max-w-lg text-2xl font-semibold leading-tight tracking-tight text-[#f0f2ed] sm:text-3xl md:text-4xl">
+                            {step.title}
+                          </h3>
 
-                            <p
-                              className={cn(
-                                'mt-3 text-sm leading-relaxed transition-colors duration-700',
-                                isActive
-                                  ? 'text-muted-foreground'
-                                  : 'text-muted-foreground/70'
-                              )}
-                            >
-                              {step.desc}
+                          <p className="mt-5 text-base leading-7 text-[#c0c8bd] md:text-lg md:leading-8">
+                            {step.desc}
+                          </p>
+
+                          <div className="my-6 h-px w-full bg-gradient-to-r from-[#477f4d]/70 via-[#477f4d]/20 to-transparent" />
+
+                          <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#8acb78]">
+                            Why it matters
+                          </p>
+
+                          <p className="mt-3 text-sm leading-7 text-[#99a399] md:text-base md:leading-7">
+                            {context.impact}
+                          </p>
+
+                          <div className="mt-6 border-l-2 border-[#477f4d] pl-4">
+                            <p className="text-sm leading-6 text-[#c0c8bd] md:text-base">
+                              {context.detail}
                             </p>
                           </div>
                         </div>
-                      </div>
-                    </div>
-                  </BorderGlow>
+                      </article>
+                    </BorderGlow>
+                  </div>
+                )
+              })}
+            </div>
+
+            {/* Controls */}
+            <div className="mt-7 flex items-center justify-between gap-4">
+              <p className="hidden text-xs tracking-wide text-[#99a399] sm:block">
+                EXPLORE THE CHALLENGES
+              </p>
+
+              <div className="ml-auto flex items-center gap-4">
+                <div className="flex items-center gap-2">
+                  {steps.slice(0, count).map((step, index) => (
+                    <button
+                      key={step.title}
+                      type="button"
+                      aria-label={`Show problem ${index + 1}: ${step.title}`}
+                      aria-current={index === activeIndex ? 'step' : undefined}
+                      onClick={() => selectCard(index)}
+                      className={cn(
+                        'h-2 rounded-full transition-all duration-300',
+                        index === activeIndex
+                          ? 'w-8 bg-[#8acb78]'
+                          : 'w-2 bg-[#99a399]/35 hover:bg-[#99a399]/70',
+                      )}
+                    />
+                  ))}
                 </div>
-              )
-            })}
-          </div>
 
-          {/* Carousel indicators */}
-          <div className="absolute bottom-8 left-1/2 z-[200] flex -translate-x-1/2 items-center gap-2">
-            {t.problem.steps.map((_, index) => (
-              <button
-                key={index}
-                type="button"
-                aria-label={`Show problem step ${index + 1}`}
-                onClick={() => selectCard(index)}
-                className={cn(
-                  'h-1.5 rounded-full transition-all duration-500',
-                  index === activeIndex
-                    ? 'w-8 bg-[#42a878]'
-                    : 'w-1.5 bg-[#aeb8aa]/30'
-                )}
-              />
-            ))}
-          </div>
+                <button
+                  type="button"
+                  aria-label="Previous problem"
+                  onClick={() => selectCard(activeIndex - 1)}
+                  className="flex size-11 items-center justify-center rounded-full border border-[#477f4d]/50 text-[#f0f2ed] transition-colors hover:border-[#8acb78] hover:bg-[#0f3e1e]/40"
+                >
+                  <ArrowLeft size={18} aria-hidden="true" />
+                </button>
 
-          <p className="pointer-events-none absolute bottom-1 left-1/2 z-[100] hidden -translate-x-1/2 text-[10px] uppercase tracking-[0.22em] text-[#aeb8aa]/40 md:block">
-            Drag to explore
-          </p>
-        </div>
+                <button
+                  type="button"
+                  aria-label="Next problem"
+                  onClick={() => selectCard(activeIndex + 1)}
+                  className="flex size-11 items-center justify-center rounded-full border border-[#477f4d]/50 text-[#f0f2ed] transition-colors hover:border-[#8acb78] hover:bg-[#0f3e1e]/40"
+                >
+                  <ArrowRight size={18} aria-hidden="true" />
+                </button>
+              </div>
+            </div>
+
+            {/* Closing statement */}
+            <div className="mt-12 border-t border-line-strong pt-7 md:mt-16 md:pt-9">
+              <p className="mx-auto max-w-3xl text-center text-base leading-8 text-[#c0c8bd] md:text-lg md:leading-9">
+                Waste becomes a bigger problem when collection, transport,
+                processing and fair compensation do not connect. PunarChakra
+                aims to connect these missing links so recoverable materials
+                can reach the people who can put them to use.
+              </p>
+            </div>
+          </div>
+        </Reveal>
       </div>
     </section>
   )
