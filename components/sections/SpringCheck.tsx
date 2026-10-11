@@ -56,7 +56,7 @@ export default function SpringCheck({
         }}
         animate={{
           scale: checked ? [1, 1 + bounce, 1] : 1,
-          backgroundColor: checked ? fillColor : 'transparent',
+          backgroundColor: checked ? fillColor : 'rgba(0, 0, 0, 0)',
         }}
         transition={{
           duration: 0.42,

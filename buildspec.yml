@@ -1,0 +1,33 @@
+version: 0.2
+
+env:
+  shell: bash
+
+phases:
+  build:
+    commands:
+      - |
+        set -euo pipefail
+
+        : "${AWS_ACCOUNT_ID:?Set AWS_ACCOUNT_ID in the CodeBuild project}"
+        : "${AWS_DEFAULT_REGION:?Set AWS_DEFAULT_REGION in the CodeBuild project}"
+        : "${ECR_REPOSITORY:?Set ECR_REPOSITORY in the CodeBuild project}"
+        : "${NEXT_PUBLIC_SUPABASE_URL:?Set NEXT_PUBLIC_SUPABASE_URL in the CodeBuild project}"
+        : "${NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY:?Set NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY in the CodeBuild project}"
+
+        registry="${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_DEFAULT_REGION}.amazonaws.com"
+        image_uri="${registry}/${ECR_REPOSITORY}"
+        source_version="${CODEBUILD_RESOLVED_SOURCE_VERSION:-latest}"
+        image_tag="$(printf '%s' "$source_version" | cut -c 1-12)"
+
+        aws ecr get-login-password --region "$AWS_DEFAULT_REGION" \
+          | docker login --username AWS --password-stdin "$registry"
+
+        docker build \
+          --build-arg "NEXT_PUBLIC_SUPABASE_URL=${NEXT_PUBLIC_SUPABASE_URL}" \
+          --build-arg "NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY=${NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY}" \
+          --tag "${image_uri}:${image_tag}" \
+          .
+
+        docker push "${image_uri}:${image_tag}"
+        printf 'Pushed image: %s:%s\n' "$image_uri" "$image_tag"

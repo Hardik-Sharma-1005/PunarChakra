@@ -453,7 +453,7 @@ export function Hero() {
     w-full
     max-w-[96vw]
     text-center
-    text-[clamp(70px,8.5vw,164px)]
+    text-[clamp(42px,8.5vw,164px)]
     font-semibold
     leading-[0.98]
     tracking-[-0.045em]

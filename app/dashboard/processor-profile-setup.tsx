@@ -203,7 +203,7 @@ export default function ProcessorProfileSetup({
   }
 
   return (
-    <section className="border border-[#d9dfd3] bg-white p-6 shadow-sm sm:p-8">
+    <section id="profile-setup" className="border border-[#d9dfd3] bg-white p-6 shadow-sm sm:p-8">
       <div>
         <p className="text-sm font-semibold uppercase tracking-[0.18em] text-[#d97736]">
           Processor setup

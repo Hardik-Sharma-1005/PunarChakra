@@ -76,7 +76,7 @@ export default function AdminApprovalPanel({
   }
 
   return (
-    <section className="border border-[#d9dfd3] bg-white p-6 sm:p-8">
+    <section id="account-approvals" className="border border-[#d9dfd3] bg-white p-6 sm:p-8">
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div>
           <p className="text-sm font-semibold uppercase tracking-[0.15em] text-[#d97736]">

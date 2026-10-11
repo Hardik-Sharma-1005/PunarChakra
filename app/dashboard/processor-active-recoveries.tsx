@@ -106,7 +106,7 @@ export default function ProcessorActiveRecoveries({
   }
 
   return (
-    <section className="border border-[#d9dfd3] bg-white p-6 sm:p-8">
+    <section id="active-recoveries" className="border border-[#d9dfd3] bg-white p-6 sm:p-8">
       <div className="border-b border-[#d9dfd3] pb-6">
         <p className="text-sm font-semibold uppercase tracking-[0.18em] text-[#d97736]">
           Processor workspace
@@ -115,12 +115,12 @@ export default function ProcessorActiveRecoveries({
         <div className="mt-2 flex flex-wrap items-end justify-between gap-3">
           <div>
             <h2 className="text-2xl font-bold tracking-tight text-[#203b2c]">
-              Active recoveries
+              Facility recoveries
             </h2>
 
             <p className="mt-2 max-w-2xl text-sm leading-6 text-[#66756a]">
-              Track material reserved for your facility as it moves through
-              collection, transit, and receipt.
+              Track material reserved for your facility through collection,
+              transit, receipt, and completion.
             </p>
           </div>
 
@@ -151,11 +151,11 @@ export default function ProcessorActiveRecoveries({
       {items.length === 0 && !loadError ? (
         <div className="py-12 text-center">
           <h3 className="text-base font-semibold text-[#203b2c]">
-            No active recoveries yet
+            No facility recoveries yet
           </h3>
 
           <p className="mx-auto mt-2 max-w-md text-sm leading-6 text-[#66756a]">
-            Recovery commitments assigned to your facility will appear here.
+            Recovery commitments assigned to your facility will appear here, including completed work.
           </p>
         </div>
       ) : (

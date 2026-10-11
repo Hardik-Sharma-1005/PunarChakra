@@ -12,6 +12,7 @@ const ACTIVE_TRANSACTION_STATUSES: TransactionStatus[] = [
   "collected",
   "in_transit",
   "received",
+  "completed",
 ];
 
 const MATERIAL_CATEGORIES: MaterialCategory[] = [

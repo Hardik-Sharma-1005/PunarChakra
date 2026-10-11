@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 
+import AWSMaterialRecoveryGuide from "@/app/dashboard/aws-material-recovery-guide";
 import { createWasteListingAction } from "@/lib/listings/actions";
 import type {
   MaterialCategory,
@@ -198,7 +199,7 @@ export default function GeneratorWasteListingForm() {
   }
 
   return (
-    <section className="border border-[#d9dfd3] bg-white p-6 sm:p-8">
+    <section id="new-listing" className="border border-[#d9dfd3] bg-white p-6 sm:p-8">
       <div className="border-b border-[#d9dfd3] pb-6">
         <p className="text-sm font-semibold uppercase tracking-[0.18em] text-[#d97736]">
           Generator
@@ -328,6 +329,14 @@ export default function GeneratorWasteListingForm() {
               </select>
             </div>
           </div>
+
+          <AWSMaterialRecoveryGuide
+            material={material}
+            materialLabel={
+              materialOptions.find((option) => option.value === material)
+                ?.label ?? "selected material"
+            }
+          />
         </div>
 
         <div>

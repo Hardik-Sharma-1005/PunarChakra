@@ -2,6 +2,22 @@ import { createSupabaseServerClient } from "@/lib/supabase/server";
 
 import type { ApprovalStatus, UserRole } from "@/types/domain";
 
+const ROLE_DISPLAY_NAMES: Record<UserRole, string> = {
+  generator: "Waste generator",
+  collector: "Collector",
+  processor: "Processor / Buyer",
+  admin: "Administrator",
+};
+
+function usableName(value: unknown): string | null {
+  if (typeof value !== "string") return null;
+
+  const name = value.trim();
+  if (!name || name.toLowerCase() === "new user") return null;
+
+  return name;
+}
+
 export interface CurrentProfile {
   id: string;
   displayName: string;
@@ -53,10 +69,18 @@ export async function getCurrentProfile(): Promise<CurrentProfile | null> {
     return null;
   }
 
+  const role = profile.role as UserRole;
+  const displayName =
+    usableName(profile.display_name) ??
+    usableName(user.user_metadata?.display_name) ??
+    usableName(user.user_metadata?.full_name) ??
+    usableName(user.user_metadata?.name) ??
+    ROLE_DISPLAY_NAMES[role];
+
   return {
     id: profile.id,
-    displayName: profile.display_name,
-    role: profile.role as UserRole,
+    displayName,
+    role,
     approvalStatus: profile.approval_status as ApprovalStatus,
   };
 }

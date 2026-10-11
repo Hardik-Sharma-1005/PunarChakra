@@ -1,6 +1,6 @@
 'use client'
 
-import React, { createContext, useCallback, useContext, useState, useSyncExternalStore } from 'react'
+import React, { createContext, useCallback, useContext, useEffect, useState, useSyncExternalStore } from 'react'
 import { content, type Lang } from '@/lib/content'
 
 type ContentDictionary = (typeof content)['en']
@@ -43,6 +43,10 @@ export function SiteProvider({ children }: { children: React.ReactNode }) {
   )
   const [authOpen, setAuthOpen] = useState(false)
   const [authMode, setAuthMode] = useState<'login' | 'register'>('login')
+
+  useEffect(() => {
+    document.documentElement.lang = lang
+  }, [lang])
 
   const handleSetIntroDone = useCallback((done: boolean) => {
     if (done) {

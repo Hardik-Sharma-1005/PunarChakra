@@ -123,7 +123,7 @@ export default function CollectorDiscovery({
 
   if (loadError) {
     return (
-      <section className="border border-[#e4c8c0] bg-white p-6 sm:p-8">
+      <section id="opportunities" className="border border-[#e4c8c0] bg-white p-6 sm:p-8">
         <p className="text-sm font-semibold uppercase tracking-[0.18em] text-[#d97736]">
           Collector discovery
         </p>
@@ -140,7 +140,7 @@ export default function CollectorDiscovery({
   }
 
   return (
-    <section className="space-y-6">
+    <section id="opportunities" className="space-y-6">
       <div className="border border-[#d9dfd3] bg-white p-6 sm:p-8">
         <p className="text-sm font-semibold uppercase tracking-[0.18em] text-[#d97736]">
           Collector discovery

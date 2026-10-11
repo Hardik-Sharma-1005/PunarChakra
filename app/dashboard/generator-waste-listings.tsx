@@ -91,6 +91,16 @@ const transactionStatusLabels: Record<string, string> = {
   cancelled: "Recovery cancelled",
 };
 
+const transactionStatusClasses: Record<string, string> = {
+  assigned: statusStyles.assigned.className,
+  pickup_in_progress: "border-[#e4c9a9] bg-[#fff5e8] text-[#9a5b20]",
+  collected: "border-[#bfd0e1] bg-[#eef5fb] text-[#315b80]",
+  in_transit: "border-[#bfd0e1] bg-[#eef5fb] text-[#315b80]",
+  received: "border-[#b9d1bd] bg-[#eef6ef] text-[#28563b]",
+  completed: statusStyles.completed.className,
+  cancelled: statusStyles.cancelled.className,
+};
+
 const paymentStatusLabels: Record<string, string> = {
   pending: "Pending",
   paid: "Paid",
@@ -167,7 +177,7 @@ export default async function GeneratorWasteListings({
 
   if (error) {
     return (
-      <section className="border border-[#d9dfd3] bg-white p-6 sm:p-8">
+      <section id="your-listings" className="border border-[#d9dfd3] bg-white p-6 sm:p-8">
         <div>
           <p className="text-sm font-semibold uppercase tracking-[0.18em] text-[#d97736]">
             Your listings
@@ -198,21 +208,22 @@ export default async function GeneratorWasteListings({
       .select(
         "id, listing_id, status, payment_status, created_at",
       )
-      .in("listing_id", listingIds);
+      .in("listing_id", listingIds)
+      .order("created_at", { ascending: false });
 
     transactions = (transactionData ??
       []) as RecoveryTransactionRow[];
   }
 
-  const transactionsByListingId = new Map(
-    transactions.map((transaction) => [
-      transaction.listing_id,
-      transaction,
-    ]),
-  );
+  const transactionsByListingId = new Map<string, RecoveryTransactionRow>();
+  for (const transaction of transactions) {
+    if (!transactionsByListingId.has(transaction.listing_id)) {
+      transactionsByListingId.set(transaction.listing_id, transaction);
+    }
+  }
 
   return (
-    <section className="border border-[#d9dfd3] bg-white p-6 sm:p-8">
+    <section id="your-listings" className="border border-[#d9dfd3] bg-white p-6 sm:p-8">
       <div className="border-b border-[#d9dfd3] pb-6">
         <p className="text-sm font-semibold uppercase tracking-[0.18em] text-[#d97736]">
           Your listings
@@ -264,6 +275,14 @@ export default async function GeneratorWasteListings({
 
             const location = listing.location;
             const transaction = transactionsByListingId.get(listing.id);
+            const statusClassName = transaction
+              ? transactionStatusClasses[transaction.status] ??
+                "border-[#d9dfd3] bg-[#f5f5ed] text-[#66756a]"
+              : status?.className ??
+                "border-[#d9dfd3] bg-[#f5f5ed] text-[#66756a]";
+            const statusLabel = transaction
+              ? `Recovery: ${transactionStatusLabels[transaction.status] ?? transaction.status}`
+              : status?.label ?? listing.status;
 
             return (
               <article
@@ -281,17 +300,11 @@ export default async function GeneratorWasteListings({
                     </p>
                   </div>
 
-                  {status ? (
-                    <span
-                      className={`inline-flex w-fit border px-3 py-1 text-xs font-semibold ${status.className}`}
-                    >
-                      {status.label}
-                    </span>
-                  ) : (
-                    <span className="inline-flex w-fit border border-[#d9dfd3] bg-[#f5f5ed] px-3 py-1 text-xs font-semibold text-[#66756a]">
-                      {listing.status}
-                    </span>
-                  )}
+                  <span
+                    className={`inline-flex w-fit border px-3 py-1 text-xs font-semibold ${statusClassName}`}
+                  >
+                    {statusLabel}
+                  </span>
                 </div>
 
                 <div className="mt-5 grid gap-5 border-t border-[#d9dfd3] pt-5 sm:grid-cols-2 lg:grid-cols-3">
@@ -335,6 +348,16 @@ export default async function GeneratorWasteListings({
                     <p className="mt-1 text-sm font-semibold text-[#203b2c]">
                       {location.address}, {location.city},{" "}
                       {location.state}
+                    </p>
+                  </div>
+
+                  <div className="sm:col-span-2 lg:col-span-3">
+                    <p className="text-xs font-semibold uppercase tracking-wide text-[#66756a]">
+                      Listing reference
+                    </p>
+
+                    <p className="mt-1 break-all font-mono text-xs text-[#203b2c]">
+                      {listing.id}
                     </p>
                   </div>
                 </div>

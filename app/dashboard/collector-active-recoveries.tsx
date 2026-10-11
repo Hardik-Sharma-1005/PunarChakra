@@ -68,7 +68,10 @@ function formatDate(value: string) {
   }).format(new Date(value));
 }
 
-function getNextAction(status: TransactionStatus): NextAction {
+function getNextAction(
+  status: TransactionStatus,
+  processorAssigned: boolean,
+): NextAction {
   switch (status) {
     case "assigned":
       return {
@@ -83,6 +86,8 @@ function getNextAction(status: TransactionStatus): NextAction {
       };
 
     case "collected":
+      if (!processorAssigned) return null;
+
       return {
         targetStatus: "in_transit",
         label: "Start Transit",
@@ -145,19 +150,19 @@ export default function CollectorActiveRecoveries({
   }
 
   return (
-    <section className="space-y-6">
+    <section id="active-recoveries" className="space-y-6">
       <div>
         <p className="text-sm font-semibold uppercase tracking-[0.2em] text-orange-600">
           Active recoveries
         </p>
 
         <h2 className="mt-2 text-2xl font-bold text-stone-950">
-          Manage your recovery commitments
+          Recovery commitments
         </h2>
 
         <p className="mt-2 max-w-2xl text-sm leading-6 text-stone-600">
-          Move each recovery through pickup, collection, and transit. Once
-          material is in transit, the processor takes over the next stage.
+          Move active recoveries through pickup, collection, and transit. Completed
+          recoveries stay visible here for reference.
         </p>
       </div>
 
@@ -192,9 +197,24 @@ export default function CollectorActiveRecoveries({
       ) : (
         <div className="grid gap-5">
           {items.map((item) => {
-            const nextAction = getNextAction(item.transaction.status);
+            const nextAction = getNextAction(
+              item.transaction.status,
+              Boolean(item.transaction.processorId),
+            );
+            const waitingForProcessor =
+              item.transaction.status === "collected" &&
+              !item.transaction.processorId;
             const isPending =
               pendingTransactionId === item.transaction.id;
+            const idleLabel = waitingForProcessor
+              ? "Awaiting processor assignment"
+              : item.transaction.status === "in_transit"
+                ? "Awaiting processor receipt"
+                : item.transaction.status === "received"
+                  ? "Awaiting completion"
+                  : item.transaction.status === "completed"
+                    ? "Recovery completed"
+                    : "No further action";
 
             return (
               <article
@@ -339,9 +359,14 @@ export default function CollectorActiveRecoveries({
                       </button>
                     ) : (
                       <span className="inline-flex rounded-xl bg-stone-100 px-5 py-3 text-sm font-semibold text-stone-600">
-                        Awaiting Processor
+                        {idleLabel}
                       </span>
                     )}
+                    {waitingForProcessor ? (
+                      <p className="mt-2 max-w-52 text-xs leading-5 text-stone-500">
+                        A processor must reserve this recovery before transit can begin.
+                      </p>
+                    ) : null}
                   </div>
                 </div>
               </article>

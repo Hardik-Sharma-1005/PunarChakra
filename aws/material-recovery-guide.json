@@ -1,0 +1,40 @@
+{
+  "schemaVersion": 1,
+  "materials": {
+    "concrete_rubble": {
+      "summary": "Keep concrete separate from other waste. Clean rubble may be assessed for recycled aggregate use.",
+      "sortingTip": "Remove visible rebar, timber, gypsum, and plastic; keep fine material separate when practical.",
+      "handlingTip": "Confirm the receiving recycler's specifications and acceptance before arranging transport."
+    },
+    "bricks_masonry": {
+      "summary": "Whole bricks may be suitable for direct reuse; clean broken masonry may be accepted for aggregate.",
+      "sortingTip": "Set aside reusable bricks and separate masonry from soil, plaster, gypsum, wood, and packaging.",
+      "handlingTip": "Check the processor's contamination limits before combining brick with other masonry."
+    },
+    "scrap_metal": {
+      "summary": "Metal can often be recovered when kept separate and accepted by a local scrap processor.",
+      "sortingTip": "Separate metal types when practical. Keep batteries, chemicals, oils, and pressurized containers out.",
+      "handlingTip": "Store material securely to control sharp edges and confirm safe handling requirements with the recycler."
+    },
+    "wood": {
+      "summary": "Clean, untreated lumber is generally the best candidate for direct reuse.",
+      "sortingTip": "Separate untreated wood from painted, treated, engineered, water-damaged, or contaminated wood.",
+      "handlingTip": "Do not burn waste wood; check local rules for treated or contaminated material."
+    },
+    "glass": {
+      "summary": "Glass recovery depends on type; processors may handle flat, container, laminated, and tempered glass differently.",
+      "sortingTip": "Keep glass clean and separate. Ask before including mirrors, ceramics, bulbs, or broken glass.",
+      "handlingTip": "Use rigid, clearly marked containers and follow the receiving processor's handling instructions."
+    },
+    "soil_excavated": {
+      "summary": "Excavated soil may be reusable when its quality and the destination's requirements are confirmed.",
+      "sortingTip": "Keep soil segregated by source and away from rubble, chemicals, and other suspect material.",
+      "handlingTip": "Arrange testing when required and use only destinations permitted by applicable local rules."
+    },
+    "mixed_cd_waste": {
+      "summary": "Sorting a mixed construction and demolition load can open up more reuse and recycling options.",
+      "sortingTip": "Separate concrete and masonry, metal, wood, glass, soil, and packaging where practical.",
+      "handlingTip": "Stop and seek qualified guidance if asbestos, chemicals, or unknown contamination may be present."
+    }
+  }
+}

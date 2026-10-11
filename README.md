@@ -256,7 +256,7 @@ The platform does **not** currently implement real payment processing. Features 
 
 ## Deployment
 
-PunarChakra is designed to be deployed on **Vercel** with the required Supabase environment variables configured in the deployment environment.
+PunarChakra can be deployed on **Vercel** with the required Supabase environment variables configured in the deployment environment. For an AWS container deployment, see [AWS_DEPLOYMENT.md](AWS_DEPLOYMENT.md) for the Docker and ECS Express Mode settings.
 
 For production deployments, keep all Supabase credentials and other secrets in the platform's environment-variable settings rather than committing them to the repository.
 

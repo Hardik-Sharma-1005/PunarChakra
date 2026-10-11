@@ -159,7 +159,7 @@ export default function ProcessorDiscovery({
   }
 
   return (
-    <section className="border border-[#d9dfd3] bg-white p-6 sm:p-8">
+    <section id="opportunities" className="border border-[#d9dfd3] bg-white p-6 sm:p-8">
       <div className="border-b border-[#d9dfd3] pb-6">
         <p className="text-sm font-semibold uppercase tracking-[0.18em] text-[#d97736]">
           Processor workspace
@@ -221,6 +221,13 @@ export default function ProcessorDiscovery({
         <div className="mt-6 space-y-5">
           {visibleItems.map((item) => {
             const tier = tierStyles[item.match.tier];
+            const hasQuantityMatch = item.match.reasons.includes(
+              "quantity_within_requirement",
+            );
+            const hasAvailableCapacity = item.match.reasons.includes(
+              "processing_capacity_available",
+            );
+            const canReserve = hasQuantityMatch && hasAvailableCapacity;
 
             const material =
               materialLabels[item.listing.material] ??
@@ -270,12 +277,21 @@ export default function ProcessorDiscovery({
                     onClick={() =>
                       handleReserve(item.transactionId)
                     }
-                    disabled={isPending}
+                    disabled={isPending || !canReserve}
+                    title={
+                      !hasQuantityMatch
+                        ? "This quantity is outside your facility requirements."
+                        : !hasAvailableCapacity
+                          ? "Your facility does not have enough available capacity."
+                          : undefined
+                    }
                     className="w-full border border-[#28563b] bg-[#28563b] px-5 py-3 text-sm font-semibold text-white transition hover:bg-[#203b2c] disabled:cursor-not-allowed disabled:opacity-60 lg:w-auto"
                   >
                     {isReserving
                       ? "Reserving..."
-                      : "Accept / Reserve"}
+                      : canReserve
+                        ? "Accept / Reserve"
+                        : "Not eligible to reserve"}
                   </button>
                 </div>
 
@@ -377,6 +393,14 @@ export default function ProcessorDiscovery({
                     ))}
                   </div>
                 </div>
+
+                {!canReserve ? (
+                  <p className="mt-4 border border-[#e4c9a9] bg-[#fff5e8] px-4 py-3 text-sm leading-6 text-[#9a5b20]">
+                    {!hasQuantityMatch
+                      ? "This load is outside your facility’s quantity requirements, so it cannot be reserved."
+                      : "Your facility does not have enough available capacity to reserve this load."}
+                  </p>
+                ) : null}
 
                 {item.listing.description ? (
                   <div className="mt-6 border-t border-[#d9dfd3] pt-5">
