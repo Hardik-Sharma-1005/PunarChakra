@@ -1,7 +1,3 @@
-<img width="12315" height="9915" alt="PunarChakra_workflow_gitdiagram" src="https://github.com/user-attachments/assets/780fb53c-8873-4a52-86e5-8d3ce6bc5334" />
-
-
-
 # PunarChakra ♻️
 
 **PunarChakra** is a role-based marketplace for coordinating the recovery and reuse of construction and demolition (C&D) waste.
@@ -21,6 +17,11 @@ Construction and demolition activity produces large quantities of material that 
 - Unstructured coordination can lead to usable material being dumped, burned, or lost.
 
 PunarChakra provides a shared workflow for moving material from **generation → collection → processing → recovery completion**.
+
+## PunarChakra Detailed Workflow gitdiagram
+<img width="12315" height="9915" alt="diagram (1)" src="https://github.com/user-attachments/assets/91d25a7c-788c-4f69-a005-d7deabe6f940" />
+## PunarChakra Simplified Workflow Diagram
+<img width="1536" height="1024" alt="image" src="https://github.com/user-attachments/assets/ab6dd188-12b1-4fb6-a8d5-d27826ef3efb" />
 
 ## How PunarChakra works
 
