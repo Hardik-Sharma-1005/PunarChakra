@@ -2,14 +2,19 @@
 import { createServerClient } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
 
-import { getSupabaseEnvironment } from "./lib/supabase/env";
-
 export async function proxy(request: NextRequest) {
+  const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
+  const publishableKey =
+    process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY;
+
+  // Allow public pages to load when Supabase is not configured.
+  if (!url || !publishableKey) {
+    return NextResponse.next();
+  }
+
   let supabaseResponse = NextResponse.next({
     request,
   });
-
-  const { url, publishableKey } = getSupabaseEnvironment();
 
   const supabase = createServerClient(url, publishableKey, {
     cookies: {
