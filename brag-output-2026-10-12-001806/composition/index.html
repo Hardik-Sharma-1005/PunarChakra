@@ -1,0 +1,1026 @@
+<!DOCTYPE html>
+<html lang="en" data-resolution="landscape">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=1920, height=1080">
+    <title>PunarChakra — Waste Becomes Value</title>
+    <script src="assets/vendor/gsap.min.js"></script>
+    <style>
+      :root {
+        --forest: #16442f;
+        --forest-deep: #103823;
+        --green: #2f6947;
+        --sage: #e8efe4;
+        --sage-strong: #d6e3d1;
+        --cream: #f5f3e8;
+        --paper: #fffdf7;
+        --orange: #ed6429;
+        --ink: #24362c;
+        --muted: #52665a;
+        --line: #cad8c7;
+      }
+
+      * { box-sizing: border-box; }
+
+      html, body {
+        width: 100%;
+        height: 100%;
+        margin: 0;
+        overflow: hidden;
+        background: var(--cream);
+      }
+
+      body {
+        color: var(--ink);
+        font-family: system-ui, sans-serif;
+        text-rendering: geometricPrecision;
+        -webkit-font-smoothing: antialiased;
+      }
+
+      #root {
+        position: relative;
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+        isolation: isolate;
+        background: var(--cream);
+      }
+
+      .clip {
+        position: absolute;
+        inset: 0;
+        overflow: hidden;
+      }
+
+      .scene-frame {
+        position: absolute;
+        inset: 0;
+        overflow: hidden;
+        opacity: 0;
+      }
+
+      .photo {
+        display: block;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+
+      .eyebrow {
+        color: var(--orange);
+        font-size: 22px;
+        font-weight: 800;
+        letter-spacing: 0.15em;
+        line-height: 1.2;
+        text-transform: uppercase;
+      }
+
+      .demo-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 12px;
+        min-height: 48px;
+        padding: 10px 18px;
+        border: 2px solid #edc399;
+        border-radius: 999px;
+        background: #fff3e4;
+        color: #71431f;
+        font-size: 20px;
+        font-weight: 750;
+        letter-spacing: 0.01em;
+        white-space: nowrap;
+      }
+
+      .demo-dot {
+        width: 12px;
+        height: 12px;
+        border-radius: 50%;
+        background: var(--orange);
+      }
+
+      .pointer {
+        position: absolute;
+        z-index: 30;
+        top: 0;
+        left: 0;
+        width: 38px;
+        height: 48px;
+        opacity: 0;
+        pointer-events: none;
+      }
+
+      .pointer path {
+        fill: var(--paper);
+        stroke: var(--forest-deep);
+        stroke-linecap: round;
+        stroke-linejoin: round;
+        stroke-width: 2.5px;
+      }
+
+      /* Scene 1 — the real site photograph opens the story. */
+      #hook-image {
+        position: absolute;
+        inset: 0;
+        object-position: 54% 48%;
+        transform-origin: center center;
+      }
+
+      .hook-index {
+        position: absolute;
+        top: 70px;
+        right: 82px;
+        padding: 16px 22px;
+        border: 2px solid rgba(255, 253, 247, 0.8);
+        background: var(--forest-deep);
+        color: var(--paper);
+        font-size: 22px;
+        font-weight: 800;
+        letter-spacing: 0.12em;
+      }
+
+      .hook-copy {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        display: flex;
+        width: 1160px;
+        min-height: 410px;
+        flex-direction: column;
+        justify-content: center;
+        padding: 58px 92px 64px 108px;
+        border-top: 8px solid var(--orange);
+        background: var(--forest-deep);
+        color: var(--paper);
+      }
+
+      .hook-kicker {
+        margin-bottom: 20px;
+        color: #f4c292;
+        font-size: 22px;
+        font-weight: 800;
+        letter-spacing: 0.17em;
+        text-transform: uppercase;
+      }
+
+      .hook-title {
+        margin: 0;
+        color: var(--paper);
+        font-size: 82px;
+        font-weight: 780;
+        letter-spacing: -0.055em;
+        line-height: 1.03;
+      }
+
+      .hook-subtitle {
+        margin: 12px 0 0;
+        color: #f6c18f;
+        font-size: 66px;
+        font-weight: 700;
+        letter-spacing: -0.045em;
+        line-height: 1.08;
+      }
+
+      /* Scene 2 — generator form content follows the real application labels. */
+      #scene-generator-frame { background: var(--cream); }
+
+      .generator-copy {
+        position: absolute;
+        top: 104px;
+        bottom: 92px;
+        left: 100px;
+        display: flex;
+        width: 610px;
+        flex-direction: column;
+        justify-content: center;
+      }
+
+      .mini-logo {
+        display: block;
+        width: 330px;
+        height: auto;
+        margin-bottom: 76px;
+        object-fit: contain;
+      }
+
+      .generator-copy h1 {
+        max-width: 600px;
+        margin: 20px 0 24px;
+        color: var(--forest);
+        font-size: 64px;
+        font-weight: 780;
+        letter-spacing: -0.055em;
+        line-height: 1.04;
+      }
+
+      .generator-copy p {
+        max-width: 590px;
+        margin: 0;
+        color: var(--muted);
+        font-size: 29px;
+        font-weight: 470;
+        line-height: 1.48;
+      }
+
+      .generator-copy .story-note {
+        margin-top: 44px;
+        padding-left: 22px;
+        border-left: 5px solid var(--orange);
+        color: var(--forest);
+        font-size: 24px;
+        font-weight: 700;
+        line-height: 1.4;
+      }
+
+      .workspace-card {
+        position: absolute;
+        border: 2px solid var(--sage-strong);
+        background: var(--paper);
+        box-shadow: 0 24px 72px rgba(16, 56, 35, 0.12);
+      }
+
+      .generator-form-card {
+        top: 80px;
+        right: 78px;
+        display: flex;
+        width: 1010px;
+        height: 920px;
+        flex-direction: column;
+        padding: 54px 58px 50px;
+      }
+
+      .form-head {
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+        gap: 24px;
+        padding-bottom: 28px;
+        border-bottom: 2px solid var(--line);
+      }
+
+      .form-head .eyebrow { margin-bottom: 12px; }
+
+      .form-head h2 {
+        margin: 0;
+        color: var(--forest);
+        font-size: 38px;
+        font-weight: 760;
+        letter-spacing: -0.035em;
+        line-height: 1.12;
+      }
+
+      .form-label {
+        margin: 28px 0 18px;
+        color: var(--forest);
+        font-size: 24px;
+        font-weight: 760;
+      }
+
+      .field-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 18px 20px;
+      }
+
+      .field {
+        min-height: 114px;
+        padding: 18px 22px 20px;
+        border: 2px solid var(--line);
+        background: #fbfbf5;
+      }
+
+      .field-wide { grid-column: 1 / -1; }
+
+      .field-label {
+        display: block;
+        margin-bottom: 11px;
+        color: var(--muted);
+        font-size: 20px;
+        font-weight: 720;
+        letter-spacing: 0.035em;
+      }
+
+      .field-value {
+        color: var(--ink);
+        font-size: 29px;
+        font-weight: 720;
+        line-height: 1.2;
+      }
+
+      .field-value-soft { color: var(--green); }
+
+      .pickup-ready {
+        display: flex;
+        min-height: 84px;
+        align-items: center;
+        gap: 17px;
+        padding: 18px 22px;
+        border: 2px solid #a9c6ae;
+        background: var(--sage);
+        color: var(--forest);
+        font-size: 25px;
+        font-weight: 700;
+      }
+
+      .ready-check {
+        display: grid;
+        width: 38px;
+        height: 38px;
+        flex: 0 0 38px;
+        place-items: center;
+        border-radius: 50%;
+        background: var(--green);
+        color: white;
+        font-size: 25px;
+        font-weight: 850;
+      }
+
+      .form-action-row {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 24px;
+        margin-top: auto;
+        padding-top: 28px;
+      }
+
+      .primary-button {
+        display: inline-flex;
+        min-height: 82px;
+        align-items: center;
+        justify-content: center;
+        padding: 0 38px;
+        border: 0;
+        background: var(--forest);
+        color: white;
+        font-family: inherit;
+        font-size: 27px;
+        font-weight: 760;
+        letter-spacing: -0.01em;
+        white-space: nowrap;
+      }
+
+      /* Scene 3 — collector discovery and the accepted recovery states. */
+      #scene-collector-frame { background: var(--forest-deep); }
+
+      #collector-image {
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        width: 790px;
+        object-position: 43% center;
+        transform-origin: center center;
+      }
+
+      .collector-image-label {
+        position: absolute;
+        bottom: 68px;
+        left: 64px;
+        max-width: 520px;
+        padding: 22px 26px;
+        border-left: 6px solid var(--orange);
+        background: var(--forest-deep);
+        color: var(--paper);
+        font-size: 24px;
+        font-weight: 760;
+        letter-spacing: 0.015em;
+        line-height: 1.35;
+      }
+
+      .collector-card {
+        top: 64px;
+        right: 62px;
+        display: flex;
+        width: 1195px;
+        height: 952px;
+        flex-direction: column;
+        padding: 54px 58px 52px;
+      }
+
+      .collector-card-head {
+        padding-bottom: 26px;
+        border-bottom: 2px solid var(--line);
+      }
+
+      .collector-card-head-top {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 18px;
+      }
+
+      .collector-card h2 {
+        max-width: 1000px;
+        margin: 18px 0 0;
+        color: var(--forest);
+        font-size: 46px;
+        font-weight: 780;
+        letter-spacing: -0.047em;
+        line-height: 1.1;
+      }
+
+      .collector-overview {
+        display: grid;
+        grid-template-columns: 1fr 1.08fr;
+        gap: 34px;
+        padding: 32px 0;
+        border-bottom: 2px solid var(--line);
+      }
+
+      .match-badges {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12px;
+        margin-bottom: 22px;
+      }
+
+      .match-badge {
+        display: inline-flex;
+        min-height: 44px;
+        align-items: center;
+        padding: 8px 18px;
+        border: 2px solid #a9c6ae;
+        background: var(--sage);
+        color: var(--forest);
+        font-size: 21px;
+        font-weight: 780;
+      }
+
+      .match-badge-ready {
+        border-color: #e8c79e;
+        background: #fff3e4;
+        color: #71431f;
+      }
+
+      .listing-name {
+        margin: 0 0 12px;
+        color: var(--forest);
+        font-size: 38px;
+        font-weight: 780;
+        letter-spacing: -0.035em;
+        line-height: 1.1;
+      }
+
+      .listing-location {
+        margin: 0;
+        color: var(--muted);
+        font-size: 25px;
+        font-weight: 600;
+        line-height: 1.4;
+      }
+
+      .listing-quantity {
+        margin: 14px 0 0;
+        color: var(--ink);
+        font-size: 28px;
+        font-weight: 760;
+      }
+
+      .reasons-title {
+        margin: 0 0 16px;
+        color: var(--forest);
+        font-size: 23px;
+        font-weight: 790;
+      }
+
+      .reason-list {
+        display: grid;
+        gap: 13px;
+        margin: 0;
+        padding: 0;
+        list-style: none;
+      }
+
+      .reason-list li {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        color: var(--ink);
+        font-size: 22px;
+        font-weight: 640;
+        line-height: 1.24;
+      }
+
+      .reason-check {
+        display: grid;
+        width: 32px;
+        height: 32px;
+        flex: 0 0 32px;
+        place-items: center;
+        border-radius: 50%;
+        background: var(--sage);
+        color: var(--green);
+        font-size: 21px;
+        font-weight: 850;
+      }
+
+      .collector-action-row {
+        display: flex;
+        min-height: 104px;
+        align-items: center;
+        justify-content: flex-end;
+        gap: 20px;
+        padding-top: 20px;
+      }
+
+      .accepted-state {
+        display: inline-flex;
+        min-height: 76px;
+        align-items: center;
+        padding: 0 30px;
+        border: 2px solid #a9c6ae;
+        background: var(--sage);
+        color: var(--forest);
+        font-size: 26px;
+        font-weight: 780;
+        opacity: 0;
+      }
+
+      .status-label {
+        margin: 6px 0 16px;
+        color: var(--muted);
+        font-size: 20px;
+        font-weight: 760;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+      }
+
+      .status-stages {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 14px;
+      }
+
+      .status-stage {
+        display: flex;
+        min-height: 112px;
+        align-items: center;
+        gap: 16px;
+        padding: 16px 18px;
+        border: 2px solid var(--line);
+        background: #fbfbf5;
+        color: var(--forest);
+        font-size: 21px;
+        font-weight: 730;
+        line-height: 1.2;
+        opacity: 0;
+      }
+
+      .status-stage-dot {
+        width: 17px;
+        height: 17px;
+        flex: 0 0 17px;
+        border-radius: 50%;
+        background: var(--green);
+      }
+
+      .status-stage:last-child .status-stage-dot { background: var(--orange); }
+
+      /* Scene 4 — processor receipt, then the actual PunarChakra lockup. */
+      #scene-processor-frame { background: var(--cream); }
+
+      #processor-image {
+        position: absolute;
+        top: 0;
+        right: 0;
+        width: 760px;
+        height: 100%;
+        object-position: 46% center;
+      }
+
+      .processor-card {
+        top: 88px;
+        left: 80px;
+        display: flex;
+        width: 1070px;
+        height: 830px;
+        flex-direction: column;
+        padding: 56px 60px;
+      }
+
+      .processor-card-head {
+        padding-bottom: 26px;
+        border-bottom: 2px solid var(--line);
+      }
+
+      .processor-card h2 {
+        margin: 14px 0 12px;
+        color: var(--forest);
+        font-size: 58px;
+        font-weight: 790;
+        letter-spacing: -0.05em;
+        line-height: 1.04;
+      }
+
+      .processor-description {
+        max-width: 830px;
+        margin: 0;
+        color: var(--muted);
+        font-size: 25px;
+        font-weight: 480;
+        line-height: 1.42;
+      }
+
+      .recovery-item {
+        display: flex;
+        flex: 1;
+        flex-direction: column;
+        justify-content: center;
+        padding: 32px 0 22px;
+      }
+
+      .processor-badges {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 14px;
+        margin-bottom: 22px;
+      }
+
+      .processor-status-wrap {
+        position: relative;
+        min-width: 165px;
+        min-height: 48px;
+      }
+
+      .processor-status {
+        position: absolute;
+        top: 0;
+        left: 0;
+        display: inline-flex;
+        min-height: 46px;
+        align-items: center;
+        padding: 8px 18px;
+        border: 2px solid #a9c6ae;
+        background: var(--sage);
+        color: var(--forest);
+        font-size: 21px;
+        font-weight: 780;
+        white-space: nowrap;
+      }
+
+      #processor-status-received {
+        border-color: #8fb99a;
+        background: #e4f2e6;
+        color: #1d5a33;
+        opacity: 0;
+      }
+
+      .reservation-badge {
+        display: inline-flex;
+        min-height: 46px;
+        align-items: center;
+        padding: 8px 18px;
+        border: 2px solid #e8c79e;
+        background: #fff3e4;
+        color: #71431f;
+        font-size: 20px;
+        font-weight: 720;
+      }
+
+      .processor-item-title {
+        margin: 0;
+        color: var(--forest);
+        font-size: 42px;
+        font-weight: 780;
+        letter-spacing: -0.04em;
+        line-height: 1.12;
+      }
+
+      .processor-item-meta {
+        margin: 16px 0 0;
+        color: var(--muted);
+        font-size: 27px;
+        font-weight: 620;
+      }
+
+      .processor-action-row {
+        display: flex;
+        align-items: center;
+        justify-content: flex-end;
+        gap: 20px;
+        padding-top: 26px;
+        border-top: 2px solid var(--line);
+      }
+
+      #processor-complete-button { opacity: 0; }
+
+      .brand-end-card {
+        position: absolute;
+        inset: 0;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        background: var(--cream);
+        opacity: 0;
+      }
+
+      .brand-lockup {
+        display: flex;
+        width: 100%;
+        flex-direction: column;
+        align-items: center;
+        opacity: 0;
+      }
+
+      .brand-logo {
+        display: block;
+        width: 940px;
+        height: auto;
+        object-fit: contain;
+      }
+
+      .brand-rule {
+        width: 230px;
+        height: 6px;
+        margin: 20px 0 32px;
+        background: var(--orange);
+        transform-origin: left center;
+      }
+
+      .brand-line {
+        margin: 0;
+        color: var(--forest);
+        font-size: 76px;
+        font-weight: 790;
+        letter-spacing: -0.045em;
+        line-height: 1.08;
+        opacity: 0;
+      }
+
+      .brand-roles {
+        margin: 27px 0 0;
+        color: var(--muted);
+        font-size: 26px;
+        font-weight: 700;
+        letter-spacing: 0.045em;
+        line-height: 1.3;
+        opacity: 0;
+      }
+    </style>
+  </head>
+  <body>
+    <div data-hf-id="hf-at0g" id="root" data-composition-id="main" data-start="0" data-duration="20" data-width="1920" data-height="1080">
+      <!--
+        Nominal scene spans: 0–3.82, 3.82–8.74, 8.74–13.11, and 13.11–20.
+        The first three picture clips extend 0.58s into the next span to dissolve.
+      -->
+      <section data-hf-id="hf-0ms9" id="scene-hook" class="clip" data-start="0" data-duration="4.4" data-track-index="0" aria-label="Construction waste becomes a recovery opportunity">
+        <div data-hf-id="hf-4v26" id="scene-hook-frame" class="scene-frame">
+          <img data-hf-id="hf-1dj4" id="hook-image" class="photo" src="assets/images/construction-waste.png" alt="">
+          <div data-hf-id="hf-4lvi" class="hook-index">01 / MATERIAL LEFT BEHIND</div>
+          <div data-hf-id="hf-8pko" id="hook-copy" class="hook-copy">
+            <div data-hf-id="hf-0p94" class="hook-kicker">PunarChakra · Material recovery</div>
+            <h1 data-hf-id="hf-aciv" id="hook-title" class="hook-title">Construction waste.</h1>
+            <p data-hf-id="hf-g5k5" id="hook-subtitle" class="hook-subtitle">Recoverable resource.</p>
+          </div>
+        </div>
+      </section>
+
+      <section data-hf-id="hf-kz3i" id="scene-generator" class="clip" data-start="3.82" data-duration="5.5" data-track-index="1" aria-label="Generator lists recoverable material">
+        <div data-hf-id="hf-tjyu" id="scene-generator-frame" class="scene-frame">
+          <div data-hf-id="hf-ca4y" id="generator-copy" class="generator-copy">
+            <img data-hf-id="hf-uu4v" class="mini-logo" src="assets/brand/punarchakra-logo.png" alt="">
+            <div data-hf-id="hf-meay" class="eyebrow">01 / Generator</div>
+            <h1 data-hf-id="hf-alja">List your recoverable material</h1>
+            <p data-hf-id="hf-bb69">
+              Tell collectors what material you have, how much is available,
+              and where it can be picked up.
+            </p>
+            <div data-hf-id="hf-liyh" class="story-note">Illustrative sample listing — not a live record.</div>
+          </div>
+
+          <div data-hf-id="hf-pbyr" id="generator-form" class="workspace-card generator-form-card">
+            <div data-hf-id="hf-n6st" class="form-head">
+              <div data-hf-id="hf-yeow">
+                <div data-hf-id="hf-3ypn" class="eyebrow">Generator workspace</div>
+                <h2 data-hf-id="hf-bjf4">Material details</h2>
+              </div>
+              <span data-hf-id="hf-bhpp" class="demo-badge"><span data-hf-id="hf-krru" class="demo-dot"></span>Illustrative demo data</span>
+            </div>
+            <div data-hf-id="hf-95xf" class="form-label">List your recoverable material</div>
+            <div data-hf-id="hf-22tx" class="field-grid">
+              <div data-hf-id="hf-ur4d" class="field field-wide gen-field">
+                <span data-hf-id="hf-hns3" class="field-label">Material</span>
+                <span data-hf-id="hf-jgq4" class="field-value">Concrete &amp; Rubble</span>
+              </div>
+              <div data-hf-id="hf-rj0x" class="field gen-field">
+                <span data-hf-id="hf-iywb" class="field-label">Condition</span>
+                <span data-hf-id="hf-k4qj" class="field-value">Clean &amp; Sorted</span>
+              </div>
+              <div data-hf-id="hf-y8p1" class="field gen-field">
+                <span data-hf-id="hf-gi78" class="field-label">Quantity · Unit</span>
+                <span data-hf-id="hf-u6mj" class="field-value">2.5 tonnes</span>
+              </div>
+              <div data-hf-id="hf-dyip" class="field field-wide gen-field">
+                <span data-hf-id="hf-4q39" class="field-label">Pickup location</span>
+                <span data-hf-id="hf-fgrd" class="field-value">Ghaziabad, UP</span>
+              </div>
+              <div data-hf-id="hf-f5fs" class="field field-wide gen-field">
+                <span data-hf-id="hf-7yhu" class="field-label">Pickup readiness</span>
+                <div data-hf-id="hf-gay6" class="pickup-ready">
+                  <span data-hf-id="hf-5zdq" class="ready-check">✓</span>
+                  <span data-hf-id="hf-47ih">Ready for pickup now</span>
+                </div>
+              </div>
+            </div>
+            <div data-hf-id="hf-t5oi" class="form-action-row">
+              <span data-hf-id="hf-g1nb" class="field-value field-value-soft">Details shared with collectors</span>
+              <button data-hf-id="hf-0dmv" id="generator-submit" class="primary-button" type="button">Create listing</button>
+            </div>
+          </div>
+
+          <svg data-hf-id="hf-iey0" id="pointer-generator" class="pointer" viewBox="0 0 38 48" aria-hidden="true">
+            <path data-hf-id="hf-ozpt" d="M3 3 L3 35 L12 27 L19 43 L26 40 L19 24 L31 24 Z" />
+          </svg>
+        </div>
+      </section>
+
+      <section data-hf-id="hf-p273" id="scene-collector" class="clip" data-start="8.74" data-duration="4.95" data-track-index="2" aria-label="Collector discovers and accepts a suitable recovery job">
+        <div data-hf-id="hf-vz60" id="scene-collector-frame" class="scene-frame">
+          <img data-hf-id="hf-ptxv" id="collector-image" class="photo" src="assets/images/recovery-opportunity.png" alt="">
+          <div data-hf-id="hf-y4gw" class="collector-image-label">A suitable recovery opportunity.</div>
+
+          <div data-hf-id="hf-pc7s" id="collector-card" class="workspace-card collector-card">
+            <div data-hf-id="hf-jg7n" class="collector-card-head">
+              <div data-hf-id="hf-9bkl" class="collector-card-head-top">
+                <div data-hf-id="hf-bimu" class="eyebrow">Collector discovery</div>
+                <span data-hf-id="hf-7ns1" class="demo-badge"><span data-hf-id="hf-jvzy" class="demo-dot"></span>Illustrative demo data</span>
+              </div>
+              <h2 data-hf-id="hf-t6pk">Waste opportunities matched to you</h2>
+            </div>
+            <div data-hf-id="hf-31ci" id="collector-overview" class="collector-overview">
+              <div data-hf-id="hf-y7yw">
+                <div data-hf-id="hf-v2xg" class="match-badges">
+                  <span data-hf-id="hf-5hu8" class="match-badge">Strong Match</span>
+                  <span data-hf-id="hf-nrmo" class="match-badge match-badge-ready">Ready now</span>
+                </div>
+                <h3 data-hf-id="hf-folh" class="listing-name">Concrete &amp; Rubble</h3>
+                <p data-hf-id="hf-zhr5" class="listing-location">Ghaziabad, UP</p>
+                <p data-hf-id="hf-lh7t" class="listing-quantity">2.5 tonnes</p>
+              </div>
+              <div data-hf-id="hf-x11t">
+                <p data-hf-id="hf-sbhs" class="reasons-title">Why this match</p>
+                <ul data-hf-id="hf-31t1" class="reason-list">
+                  <li data-hf-id="hf-a4s6"><span data-hf-id="hf-e2yv" class="reason-check">✓</span><span data-hf-id="hf-8g3x">Material accepted</span></li>
+                  <li data-hf-id="hf-9x5m"><span data-hf-id="hf-1uav" class="reason-check">✓</span><span data-hf-id="hf-6ejy">Quantity is within your capacity</span></li>
+                  <li data-hf-id="hf-abgn"><span data-hf-id="hf-1fzu" class="reason-check">✓</span><span data-hf-id="hf-hkgt">Listing is within your operating area</span></li>
+                </ul>
+              </div>
+            </div>
+            <div data-hf-id="hf-x3wz" class="collector-action-row">
+              <span data-hf-id="hf-m0sw" id="collector-accepted" class="accepted-state">Accepted</span>
+              <button data-hf-id="hf-ih8t" id="collector-accept" class="primary-button" type="button">Accept Listing</button>
+            </div>
+            <div data-hf-id="hf-6ldy" class="status-label">Recovery status</div>
+            <div data-hf-id="hf-hnhi" class="status-stages">
+              <div data-hf-id="hf-tlhq" id="stage-pickup" class="status-stage">
+                <span data-hf-id="hf-cs4o" class="status-stage-dot"></span><span data-hf-id="hf-uvjv">Pickup in Progress</span>
+              </div>
+              <div data-hf-id="hf-vosr" id="stage-collected" class="status-stage">
+                <span data-hf-id="hf-qyxs" class="status-stage-dot"></span><span data-hf-id="hf-17jo">Collected</span>
+              </div>
+              <div data-hf-id="hf-xmxj" id="stage-transit" class="status-stage">
+                <span data-hf-id="hf-ps0p" class="status-stage-dot"></span><span data-hf-id="hf-7zn9">In Transit</span>
+              </div>
+            </div>
+          </div>
+
+          <svg data-hf-id="hf-wu1i" id="pointer-collector" class="pointer" viewBox="0 0 38 48" aria-hidden="true">
+            <path data-hf-id="hf-zyo5" d="M3 3 L3 35 L12 27 L19 43 L26 40 L19 24 L31 24 Z" />
+          </svg>
+        </div>
+      </section>
+
+      <section data-hf-id="hf-149t" id="scene-processor" class="clip" data-start="13.11" data-duration="6.89" data-track-index="3" aria-label="Processor records receipt and the PunarChakra brand close">
+        <div data-hf-id="hf-5wmx" id="scene-processor-frame" class="scene-frame">
+          <img data-hf-id="hf-emc4" id="processor-image" class="photo" src="assets/images/recovery-opportunity.png" alt="">
+          <div data-hf-id="hf-ykrk" id="processor-card" class="workspace-card processor-card">
+            <div data-hf-id="hf-bvnu" id="processor-card-head" class="processor-card-head">
+              <div data-hf-id="hf-zzv6" class="eyebrow">Processor workspace</div>
+              <h2 data-hf-id="hf-2u99">Facility recoveries</h2>
+              <p data-hf-id="hf-bkxs" class="processor-description">
+                Track material reserved for your facility through collection, transit, receipt, and completion.
+              </p>
+            </div>
+            <div data-hf-id="hf-rh47" class="recovery-item">
+              <div data-hf-id="hf-sbyq" id="processor-badges" class="processor-badges">
+                <span data-hf-id="hf-8up4" class="demo-badge"><span data-hf-id="hf-kaaz" class="demo-dot"></span>Illustrative demo data</span>
+                <span data-hf-id="hf-ix37" class="processor-status-wrap">
+                  <span data-hf-id="hf-7709" id="processor-status-transit" class="processor-status">In Transit</span>
+                  <span data-hf-id="hf-cdiu" id="processor-status-received" class="processor-status">Received</span>
+                </span>
+              </div>
+              <div data-hf-id="hf-58yp" class="processor-badges">
+                <span data-hf-id="hf-9hj0" class="reservation-badge">Reserved for your facility</span>
+              </div>
+              <h3 data-hf-id="hf-ozbu" class="processor-item-title">Concrete &amp; Rubble</h3>
+              <p data-hf-id="hf-l7em" class="processor-item-meta">2.5 tonnes · Ghaziabad, UP</p>
+            </div>
+            <div data-hf-id="hf-esm8" class="processor-action-row">
+              <button data-hf-id="hf-nl6c" id="processor-receive-button" class="primary-button" type="button">Mark as Received</button>
+              <button data-hf-id="hf-wy1o" id="processor-complete-button" class="primary-button" type="button">Mark as Completed</button>
+            </div>
+          </div>
+
+          <svg data-hf-id="hf-w0ff" id="pointer-processor" class="pointer" viewBox="0 0 38 48" aria-hidden="true">
+            <path data-hf-id="hf-15l8" d="M3 3 L3 35 L12 27 L19 43 L26 40 L19 24 L31 24 Z" />
+          </svg>
+
+          <div data-hf-id="hf-fsqq" id="brand-end-card" class="brand-end-card">
+            <div data-hf-id="hf-deqa" id="brand-lockup" class="brand-lockup">
+              <img data-hf-id="hf-0fv2" id="brand-logo" class="brand-logo" src="assets/brand/punarchakra-logo.png" alt="PunarChakra">
+              <div data-hf-id="hf-vp0i" id="brand-rule" class="brand-rule"></div>
+              <p data-hf-id="hf-o33m" id="brand-line" class="brand-line">Waste Becomes Value</p>
+              <p data-hf-id="hf-sctj" id="brand-roles" class="brand-roles">Generator · Collector · Processor</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <audio data-hf-id="hf-0l7o" id="music-bed" src="assets/music/happy-beats-business-moves-vol-12-by-ende-dot-app.mp3" data-start="0" data-duration="20" data-track-index="10" data-volume="1" data-automation="{&quot;version&quot;:1,&quot;lanes&quot;:[{&quot;target&quot;:&quot;volume&quot;,&quot;points&quot;:[{&quot;t&quot;:0,&quot;v&quot;:0},{&quot;t&quot;:0.6,&quot;v&quot;:0.32},{&quot;t&quot;:19.2,&quot;v&quot;:0.32},{&quot;t&quot;:20,&quot;v&quot;:0}]}]}"></audio>
+      <audio data-hf-id="hf-sd93" id="generator-click" src="assets/sfx/interface/click_003.ogg" data-start="7.64" data-duration="0.28" data-track-index="11" data-volume="0.28"></audio>
+      <audio data-hf-id="hf-tdnp" id="collector-click" src="assets/sfx/interface/click_003.ogg" data-start="10.37" data-duration="0.28" data-track-index="11" data-volume="0.28"></audio>
+      <audio data-hf-id="hf-ul14" id="processor-receipt" src="assets/sfx/impact/impactSoft_medium_001.ogg" data-start="15.29" data-duration="0.32" data-track-index="11" data-volume="0.24"></audio>
+    </div>
+
+    <script>
+      const root = document.querySelector("[data-composition-id]");
+      const compositionId = root.dataset.compositionId;
+      const tl = gsap.timeline({ paused: true });
+
+      tl.addLabel("material-hook", 0);
+      tl.addLabel("generator-listing", 3.82);
+      tl.addLabel("collector-match", 8.74);
+      tl.addLabel("processor-receipt", 13.11);
+      tl.addLabel("brand-close", 17.47);
+
+      // Scene 1: the image stays true to its source; a separate forest panel carries the copy.
+      tl.to("#hook-image", { scale: 1.055, duration: 4.4, ease: "none" }, 0);
+      tl.to("#scene-hook-frame", { opacity: 1, duration: 0.5, ease: "power2.out" }, 0.18);
+      tl.fromTo("#hook-copy", { x: -48, opacity: 0 }, { x: 0, opacity: 1, duration: 0.72, ease: "power3.out" }, 0.34);
+      tl.fromTo("#hook-title", { y: 24, opacity: 0 }, { y: 0, opacity: 1, duration: 0.58, ease: "power2.out" }, 0.56);
+      tl.fromTo("#hook-subtitle", { y: 18, opacity: 0 }, { y: 0, opacity: 1, duration: 0.62, ease: "sine.out" }, 1.05);
+      tl.to("#scene-hook-frame", { opacity: 0, duration: 0.58, ease: "power1.in" }, 3.82);
+
+      // Scene 2: the actual Generator fields and controls arrive in a different rhythm.
+      tl.to("#scene-generator-frame", { opacity: 1, duration: 0.58, ease: "power2.out" }, 3.82);
+      tl.fromTo("#generator-copy", { x: -34, opacity: 0 }, { x: 0, opacity: 1, duration: 0.68, ease: "expo.out" }, 4.02);
+      tl.fromTo("#generator-form", { x: 44, opacity: 0 }, { x: 0, opacity: 1, duration: 0.72, ease: "power3.out" }, 4.12);
+      tl.fromTo("#generator-form .gen-field", { y: 18, opacity: 0 }, { y: 0, opacity: 1, duration: 0.34, ease: "power2.out", stagger: 0.12 }, 4.58);
+      tl.fromTo("#generator-submit", { y: 14, opacity: 0 }, { y: 0, opacity: 1, duration: 0.38, ease: "back.out(1.4)" }, 5.38);
+
+      // beat-locked: 7.64s — illustrative Create listing button press.
+      tl.fromTo("#pointer-generator", { x: 1300, y: 1010, opacity: 0 }, { x: 1582, y: 875, opacity: 1, duration: 0.46, ease: "power3.out" }, 7.08);
+      tl.to("#generator-submit", { scale: 0.965, duration: 0.09, ease: "power1.in" }, 7.64);
+      tl.to("#generator-submit", { scale: 1, duration: 0.16, ease: "back.out(2)" }, 7.73);
+      tl.to("#pointer-generator", { opacity: 0, duration: 0.16, ease: "power1.in" }, 7.9);
+      tl.to("#scene-generator-frame", { opacity: 0, duration: 0.58, ease: "power1.in" }, 8.74);
+
+      // Scene 3: actual Collector discovery copy and matching reasons.
+      tl.to("#scene-collector-frame", { opacity: 1, duration: 0.58, ease: "power2.out" }, 8.74);
+      tl.to("#collector-image", { scale: 1.045, duration: 4.95, ease: "none" }, 8.74);
+      tl.fromTo("#collector-card", { x: 38, opacity: 0 }, { x: 0, opacity: 1, duration: 0.72, ease: "power3.out" }, 8.96);
+      tl.fromTo("#collector-card-head h2", { y: 20, opacity: 0 }, { y: 0, opacity: 1, duration: 0.5, ease: "power2.out" }, 9.22);
+      tl.fromTo("#collector-overview", { y: 18, opacity: 0 }, { y: 0, opacity: 1, duration: 0.48, ease: "sine.out" }, 9.48);
+      tl.fromTo("#collector-accept", { scale: 0.97, opacity: 0 }, { scale: 1, opacity: 1, duration: 0.36, ease: "back.out(1.5)" }, 9.86);
+
+      // beat-locked: 10.37s — illustrative Accept Listing action changes to the actual Accepted state.
+      tl.fromTo("#pointer-collector", { x: 1240, y: 1030, opacity: 0 }, { x: 1646, y: 522, opacity: 1, duration: 0.42, ease: "expo.out" }, 9.95);
+      tl.to("#collector-accept", { scale: 0.965, duration: 0.09, ease: "power1.in" }, 10.37);
+      tl.to("#collector-accept", { scale: 1, opacity: 0, duration: 0.18, ease: "power2.out" }, 10.46);
+      tl.to("#collector-accepted", { opacity: 1, duration: 0.2, ease: "power2.out" }, 10.47);
+      tl.to("#pointer-collector", { opacity: 0, duration: 0.15, ease: "power1.in" }, 10.66);
+
+      // beat-grid: Pickup 10.93s, Collected 11.46s, In Transit 12.02s; keep the full set readable.
+      tl.fromTo("#stage-pickup", { y: 14, opacity: 0 }, { y: 0, opacity: 1, duration: 0.26, ease: "power2.out" }, 10.93);
+      tl.fromTo("#stage-collected", { y: 14, opacity: 0 }, { y: 0, opacity: 1, duration: 0.26, ease: "sine.out" }, 11.46);
+      tl.fromTo("#stage-transit", { y: 14, opacity: 0 }, { y: 0, opacity: 1, duration: 0.28, ease: "power3.out" }, 12.02);
+      tl.to("#scene-collector-frame", { opacity: 0, duration: 0.58, ease: "power1.in" }, 13.11);
+
+      // Scene 4: Processor receipt, followed by the existing brand lockup at 17.47s.
+      tl.to("#scene-processor-frame", { opacity: 1, duration: 0.58, ease: "power2.out" }, 13.11);
+      tl.fromTo("#processor-card", { x: -34, opacity: 0 }, { x: 0, opacity: 1, duration: 0.68, ease: "expo.out" }, 13.32);
+      tl.fromTo("#processor-card-head h2", { y: 20, opacity: 0 }, { y: 0, opacity: 1, duration: 0.5, ease: "power2.out" }, 13.68);
+      tl.fromTo("#processor-badges", { y: 18, opacity: 0 }, { y: 0, opacity: 1, duration: 0.45, ease: "sine.out" }, 14.08);
+      tl.fromTo("#processor-receive-button", { scale: 0.97, opacity: 0 }, { scale: 1, opacity: 1, duration: 0.38, ease: "back.out(1.5)" }, 14.5);
+      tl.fromTo("#pointer-processor", { x: 1280, y: 1020, opacity: 0 }, { x: 916, y: 810, opacity: 1, duration: 0.48, ease: "power3.out" }, 14.82);
+      tl.to("#processor-receive-button", { scale: 0.965, duration: 0.09, ease: "power1.in" }, 15.29);
+      tl.to("#processor-receive-button", { scale: 1, opacity: 0, duration: 0.18, ease: "power2.out" }, 15.38);
+      tl.to("#processor-status-transit", { opacity: 0, duration: 0.16, ease: "power1.in" }, 15.38);
+      tl.to("#processor-status-received", { opacity: 1, duration: 0.22, ease: "power2.out" }, 15.4);
+      tl.to("#processor-complete-button", { opacity: 1, duration: 0.24, ease: "sine.out" }, 15.52);
+      tl.to("#pointer-processor", { opacity: 0, duration: 0.16, ease: "power1.in" }, 15.58);
+
+      tl.to("#brand-end-card", { opacity: 1, duration: 0.62, ease: "power2.out" }, 17.47);
+      tl.fromTo("#brand-lockup", { scale: 0.975, opacity: 0 }, { scale: 1, opacity: 1, duration: 0.72, ease: "power3.out" }, 17.72);
+      tl.fromTo("#brand-rule", { scaleX: 0 }, { scaleX: 1, duration: 0.48, ease: "expo.out" }, 18.04);
+      tl.fromTo("#brand-line", { y: 18, opacity: 0 }, { y: 0, opacity: 1, duration: 0.5, ease: "power2.out" }, 18.22);
+      tl.fromTo("#brand-roles", { y: 14, opacity: 0 }, { y: 0, opacity: 1, duration: 0.45, ease: "sine.out" }, 18.52);
+
+      // Register the single seekable root timeline after its tweens are complete.
+      window.__timelines[compositionId] = tl;
+    </script>
+  </body>
+</html>
